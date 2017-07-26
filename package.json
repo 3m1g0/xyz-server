@@ -1,0 +1,23 @@
+{
+  "name": "xyz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "XYZ Innovations"
+  ],
+  "author": "Krishna Teja",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "express": "^4.15.3",
+    "geojson": "^0.4.1",
+    "mongoose": "^4.10.6",
+    "mongoose-geojson-schema": "^2.1.2"
+  }
+}
