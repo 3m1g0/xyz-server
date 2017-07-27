@@ -13,9 +13,15 @@ mongoose.connect('mongodb://localhost/Annotationsdb');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/js', express.static('js'))
+app.use('/css', express.static('css'))
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/html/index.html');
+});
+
+app.get('/home', function(req, res){
+  res.sendFile(__dirname + '/html/home.html');
 });
 
 var routes = require('./api/routes/annotationRoutes');
