@@ -8,7 +8,7 @@ var express = require('express'),
   app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://heroku_hjlz1cm3:Teja%40123@ds127443.mlab.com:27443/heroku_hjlz1cm3');
+mongoose.connect('mongodb://xyzserver:xyzserver@ds127443.mlab.com:27443/heroku_hjlz1cm3');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
