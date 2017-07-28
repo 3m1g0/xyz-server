@@ -5,8 +5,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Annotation = require('./api/models/annotationModel'),
   fs = require('fs'),
-  app = express(),
-  GeoJSON = require('geojson');
+  app = express();
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Annotationsdb');
@@ -16,11 +15,11 @@ app.use(bodyParser.json());
 app.use('/js', express.static('js'))
 app.use('/css', express.static('css'))
 
-app.get('/', function(req, res){
+app.get('/index', function(req, res){
   res.sendFile(__dirname + '/html/index.html');
 });
 
-app.get('/home', function(req, res){
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/html/home.html');
 });
 

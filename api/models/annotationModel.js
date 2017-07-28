@@ -1,5 +1,5 @@
 'use strict';
-var GeoJSON = require('mongoose-geojson-schema');
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
