@@ -5,29 +5,28 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Annotation = require('./api/models/annotationModel'),
   fs = require('fs'),
-  app = express(),
-  GeoJSON = require('geojson');
+  app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Annotationsdb');
+mongoose.connect('mongodb://xyzserver:xyzserver@ds127443.mlab.com:27443/heroku_hjlz1cm3');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/js', express.static('js'))
 app.use('/css', express.static('css'))
 
-app.get('/', function(req, res){
+app.get('/index', function(req, res){
   res.sendFile(__dirname + '/html/index.html');
 });
 
-app.get('/home', function(req, res){
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/html/home.html');
 });
 
 var routes = require('./api/routes/annotationRoutes');
 routes(app);
 
-var server = app.listen(3000, function () {
+var server = app.listen(port, function () {
    var host = server.address().address;
    var port = server.address().port;
    

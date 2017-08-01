@@ -3,7 +3,6 @@
 require('../models/annotationModel');
 var mongoose = require('mongoose'),
  Annotation = mongoose.model('Annotations');
- var setter = require('../utils/jsonSetter');
 
 exports.list_all_annotations = function(req, res) {
   Annotation.find({}, function(err, annotation) {
