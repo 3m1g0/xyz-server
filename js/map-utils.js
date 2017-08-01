@@ -83,6 +83,7 @@ function getPopupCoordinatesForPolygon(geometry) {
 }
 
 function getAreaForFeature(feature) {
+    console.log(turf);
     var area = turf.area(feature);
     return rounded_area = Math.round(area*100)/100;
 }

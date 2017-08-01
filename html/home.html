@@ -27,6 +27,70 @@
             background-position: center center; 
             background-attachment: fixed;
         }
+		.detailsTab{
+			position:absolute;
+			top:62px;
+			bottom:0;
+			width:20%;
+			z-index:99999;
+            background-color: white;
+		}
+		.map-overlay{
+			width:100%;
+			padding:0;
+		}
+        .map-overlay .map-overlay-inner{
+            box-shadow: none;
+        }
+        #slider{
+            width:75%;
+            padding-left: 15px;
+        }
+        #detailsTab {
+    position: relative;
+    z-index: 1;
+    border-left: 25px solid rgba(0,0,0,.2);
+    width: 200px;
+}
+
+.open-intro, .close-intro {
+    position: absolute;
+    left: 273px;
+    cursor: pointer;
+    width: 20px;
+    height: 25px;
+    z-index: 50;
+    background-color: white;
+    top: 250px;
+    padding-left: 5px;
+}
+.open-intro {
+    display: none;
+    background: yellow 
+}
+#orthoRange{
+    display: inline-block;
+    padding-left: 15px;
+    width:75%;
+}
+.opacityOptions .opaOpt{
+    border-bottom: 1px solid #eee;
+    padding-bottom: 25px;
+}
+.opacityOptions fieldset{
+    margin-bottom: 0px;
+}
+.annoCard{
+    display: none;
+    border:1px solid #eee;
+    box-shadow: 10px 10px 5px #aaaaaa;
+    padding: 10px;
+    margin: 10px 10px 15px;
+    width:90%;
+}
+#noAnno{
+    padding: 20px;
+}
     </style>
 
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.0/mapbox-gl.js'></script>
@@ -153,12 +217,61 @@
     <!--/.Double navigation-->
     
     <!--Main layout-->
-    <main>
-        
-        <div id='map'></div>
+	<div>
+		<div class="detailsTab">
+            <div class="open-intro">+</div>
+            <div class="close-intro">-</div>
+            <div class='map-overlay top'>
+                <div class='map-overlay-inner opacityOptions'>
+                    <div class="opaOpt">
+                        <fieldset class="form-group">
+                            <input type="checkbox" class="filled-in" id="checkbox1">
+                            <label for="checkbox1">Orthomosiac</label>
+                        </fieldset>
+                        <span>Opacity</span>
+                        <form id="orthoRange" class="range-field">
+                            <input type="range" min="0" max="100" />
+                        </form>
+                    </div>
+                    <div class="opaOpt">
+                        <fieldset class="form-group">
+                            <input type="checkbox" class="filled-in" id="checkbox2">
+                            <label for="checkbox2">Basemap</label>
+                        </fieldset>
+                        <span>Opacity</span>
+                        <form id="baseRange" class="range-field">
+                            <input type="range" min="0" max="100" />
+                        </form>
+                    </div>
+                    <div class="opaOpt">
+                        <fieldset class="form-group">
+                            <input type="checkbox" class="filled-in" id="checkbox0">
+                            <label for="checkbox0" class="lead">Selected Annotations</label>
+                        </fieldset>
+                        <div id="selectedAnno" class="card card-block">
+                            <h4 class="card-text" id="noAnno"> No Annotations selected </h4>
+                            <div class="annoCard">
+                                <h4>gvugcbdic</h4>
+                                <p id="annoDesc"></p>
+                                <p class="card-text" id="annoLocation"></p>
+                                <p class="card-text" id="area"></p>
+                                <p id="perimeter"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<main>
+			
+			<div id='map'></div>   
+			
+		</main>
+	</div>
+    <!--/Main layout-->
 
-        <!--Modal: Subscription From-->
-        <div class="modal fade" id="modalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!--Modal: Subscription From-->
+    <div class="modal fade" id="modalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog cascading-modal" role="document">
                 <!--Content-->
                 <div class="modal-content">
@@ -210,9 +323,6 @@
             </div>
         </div>
         <!-- Modal Message-->
-        
-    </main>
-    <!--/Main layout-->
 
     <!-- SCRIPTS -->
     <!-- JQuery -->
@@ -305,8 +415,26 @@
         map.on('draw.selectionchange', function(e) {
             if(e.features.length > 0) {
                 var feature = getFeatureForId(e.features[0].id);
+                console.log(feature);
                 if(feature) {
                     //$("#basicExample").modal('show');
+                    $('#selectedAnno #noAnno').hide();
+                    $('#selectedAnno h4').text(feature.properties.title);
+                    $('#annoDesc').text('description : ' + feature.properties.description);
+                    $('.annoCard').show();
+                    if(feature.geometry.type == 'Polygon'){
+                       
+                        $(' #annoLocation').text();
+                        $(' #annoLocation').hide();
+                        $('#area').text("Area : " + getAreaForFeature(feature));
+                        $('#area').show();
+                    }
+                    if(feature.geometry.type == 'Point'){
+                        $(' #area').text();
+                        $(' #area').hide();
+                        $('#selectedAnno #annoLocation').text("Loctaion : " + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3));
+                        $('#annoLocation').show();
+                    }
                 }
             }
 
@@ -353,6 +481,32 @@
                 isSubmitClicked = true;
             }
         });
+		$('#detailsTab').css('min-height',$('#map').height());
+        $('.open-intro').click(function() {
+    $('.detailsTab').animate({
+    //opacity: 1,
+    left: '0',
+    width: '20%',
+    }, 500, function() {
+    // Animation complete.
+  });
+    $('.open-intro').hide();
+    $('.close-intro').show();
+});
+
+
+$('.close-intro').click(function() {
+    $('.detailsTab').animate({
+    //opacity: 0.25,
+    left: '-225',
+    width: '0px',
+  }, 400, function() {
+    // Animation complete.
+  });
+    $('.open-intro').show();
+    $('.open-intro').css('left' , '225px');
+    $('.close-intro').hide();
+});
 
     </script>
 
