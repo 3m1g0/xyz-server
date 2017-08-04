@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/js', express.static('js'))
 app.use('/css', express.static('css'))
+app.use('/panoramas', express.static('panoramas'))
 
 app.get('/index', function(req, res){
   res.sendFile(__dirname + '/html/index.html');

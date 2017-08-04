@@ -16,6 +16,7 @@
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.css' type='text/css'/>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.0/mapbox-gl.css' rel='stylesheet' />
     <link href='../css/map-page.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdn.pannellum.org/2.3/pannellum.css"/>
     <style>
         #map { position:absolute; left:0; top:62px; bottom:0; width:100%; }
     </style>
@@ -47,57 +48,133 @@
             padding-left: 15px;
         }
         #detailsTab {
-    position: relative;
-    z-index: 1;
-    border-left: 25px solid rgba(0,0,0,.2);
-    width: 200px;
-}
+            position: relative;
+            z-index: 1;
+            border-left: 25px solid rgba(0,0,0,.2);
+            width: 200px;
+        }
 
-.open-intro, .close-intro {
-    position: absolute;
-    left: 273px;
-    cursor: pointer;
-    width: 20px;
-    height: 25px;
-    z-index: 50;
-    background-color: white;
-    top: 250px;
-    padding-left: 5px;
-}
-.open-intro {
-    display: none;
-    background: yellow 
-}
-#orthoRange{
-    display: inline-block;
-    padding-left: 15px;
-    width:75%;
-}
-.opacityOptions .opaOpt{
-    border-bottom: 1px solid #eee;
-    padding-bottom: 25px;
-}
-.opacityOptions fieldset{
-    margin-bottom: 0px;
-}
-.annoCard{
-    display: none;
-    border:1px solid #eee;
-    box-shadow: 10px 10px 5px #aaaaaa;
-    padding: 10px;
-    margin: 10px 10px 15px;
-    width:90%;
-}
-#noAnno{
-    padding: 20px;
-}
+        .open-intro, .close-intro {
+            position: absolute;
+            left: 273px;
+            cursor: pointer;
+            width: 20px;
+            height: 25px;
+            z-index: 50;
+            background-color: white;
+            top: 250px;
+            padding-left: 5px;
+        }
+        .open-intro {
+            display: none;
+            background: yellow 
+        }
+        #orthoRange{
+            display: inline-block;
+            padding-left: 15px;
+            width:75%;
+        }
+        .opacityOptions .opaOpt{
+            border-bottom: 1px solid #eee;
+            padding-bottom: 25px;
+        }
+        .opacityOptions fieldset{
+            margin-bottom: 0px;
+        }
+        .annoCard{
+            display: none;
+            border:1px solid #eee;
+            box-shadow: 10px 10px 5px #aaaaaa;
+            padding: 10px;
+            margin: 10px 10px 15px;
+            width:90%;
+        }
+        #noAnno{
+            padding: 20px;
+        }
+
+        #annotationSearchBox {
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCIVl4z_5ltQZNpXhZpAqOrtnUQO5ibqx9bf67n_rsXpMlFT6w'); /* Add a search icon to input */
+            background-position: 10px 16px; /* Position the search icon */
+            background-repeat: no-repeat; /* Do not repeat the icon image */
+            width: 75%; /* Full-width */
+            font-size: 12px; /* Increase font-size */
+            padding: 6px 20px 6px 40px; /* Add some padding */
+            border: 1px solid #ddd; /* Add a grey border */
+            margin-bottom: 12px; /* Add some space below the input */
+        }
+
+        #annotationList {
+            /* Remove default list styling */
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #annotationList li span {
+            border: 1px solid #ddd; /* Add a border to all links */
+            margin-top: -1px; /* Prevent double borders */
+            background-color: #ffffff; /* Grey background color */
+            padding: 12px; /* Add some padding */
+            text-decoration: none; /* Remove default text underline */
+            font-size: 12px; /* Increase the font-size */
+            color: black; /* Add a black text color */
+            display: block; /* Make it into a block element to fill the whole list */
+        }
+
+        #annotationList li span.header {
+            background-color: #e2e2e2; /* Add a darker background color for headers */
+            cursor: default; /* Change cursor style */
+        }
+
+        .annotation-panorama-ico {
+            float: right;
+            width: 20px;
+            height: 20px;
+        }
+
+        .annotation-comments-ico {
+            float: right;
+            margin-left: 10px;
+            margin-top: 3px;
+            width: 20px;
+            height: 16px;
+        }
+
+        #disqus_thread {
+             position: relative;
+        }
+        #disqus_thread li.tab-community {
+             content: "";
+             display: none;
+             height: 55px;
+             width: 100%;
+             position: absolute;
+             bottom: 0;
+             background: white;
+        }
+        #disqus_thread:after {
+             content: "";
+             display: block;
+             height: 55px;
+             width: 100%;
+             position: absolute;
+             bottom: 0;
+             background: white;
+        }
+
+        #panorama {
+            width: 950px;
+            height: 480px;
+        }
     </style>
 
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.0/mapbox-gl.js'></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.js'></script>
     <script type="text/javascript" src="../js/map-utils.js"></script>
+    <script type="text/javascript" src="https://cdn.pannellum.org/2.3/pannellum.js"></script>
 </head>
 
 <body class="fixed-sn light-blue-skin bg-skin-lp">
@@ -120,7 +197,7 @@
                     <li><a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a></li>
                     <li><a class="icons-sm tw-ic"><i class="fa fa-twitter"> </i></a></li>
                 </ul>
-            </li>
+            </li> 
             <!--/Social-->
             <!--Search Form-->
             <li>
@@ -246,18 +323,14 @@
                     <div class="opaOpt">
                         <fieldset class="form-group">
                             <input type="checkbox" class="filled-in" id="checkbox0">
-                            <label for="checkbox0" class="lead">Selected Annotations</label>
+                            <label for="checkbox0">Annotations</label>
                         </fieldset>
-                        <div id="selectedAnno" class="card card-block">
-                            <h4 class="card-text" id="noAnno"> No Annotations selected </h4>
-                            <div class="annoCard">
-                                <h4>gvugcbdic</h4>
-                                <p id="annoDesc"></p>
-                                <p class="card-text" id="annoLocation"></p>
-                                <p class="card-text" id="area"></p>
-                                <p id="perimeter"></p>
-                            </div>
-                        </div>
+                        <form role="form">
+                            <input type="text" id="annotationSearchBox" onkeyup="filterAnnotationsList()" placeholder="Search for annotations..">
+                            <ul id="annotationList">
+                              
+                            </ul>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -311,15 +384,36 @@
 
         <!-- Modal Message-->
         <div class="modal fade top" id="basicExample" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-frame modal-top" role="document">
+            <div class="modal-dialog modal-full-height modal-right" role="document">
                 <!--Content-->
                 <div class="modal-content">
                     <!--Body-->
                     <div class="modal-body">
-                        The area or selected polygon is 123456 Sq. Mts.
+                        <div id="disqus_thread"></div>
                     </div>
                 </div>
                 <!--/.Content-->
+            </div>
+        </div>
+        <!-- Modal Message-->
+
+        <div class="modal fade right" id="panoramaModal" role="dialog">
+            <div class="modal-dialog modal-full-height modal-lg modal-right" role="document">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="heading lead">Modal Success</p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="panorama"></div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
         <!-- Modal Message-->
@@ -454,8 +548,24 @@
                         changeCoordinatesForPoints();
                         console.log("Data fetched!");
                         featureIds = draw.add(data);
+                        populateAnnotationsList(geoJSON.features);
                     }
                 });
+            });
+        });
+
+        $('#basicExample').on('show.bs.modal', function(e) {
+            var annotationId = $(e.relatedTarget).data('id');
+            reset(annotationId, annotationId);
+            console.log(annotationId);
+            //$(e.currentTarget).find('input[name="bookId"]').val(bookId);
+        });
+
+        $('#panoramaModal').on('show.bs.modal', function(e) {
+            var panoId = $(e.relatedTarget).data('id');
+            pannellum.viewer('panorama', {
+                "type": "equirectangular",
+                "panorama": "../panoramas/pano" + panoId + ".jpg"
             });
         });
 
@@ -470,6 +580,7 @@
                     currentFeature.properties.title = $('#annotationTitleField').val();
                     currentFeature.properties.description = $('#annotationDescField').val();
                     uploadFeatures(currentFeature);
+                    populateAnnotationsList(geoJSON.features);
                 }
             } else {
                 draw.delete([currentFeature.id]);
@@ -483,33 +594,90 @@
         });
 		$('#detailsTab').css('min-height',$('#map').height());
         $('.open-intro').click(function() {
-    $('.detailsTab').animate({
-    //opacity: 1,
-    left: '0',
-    width: '20%',
-    }, 500, function() {
-    // Animation complete.
-  });
-    $('.open-intro').hide();
-    $('.close-intro').show();
-});
+        $('.detailsTab').animate({
+            //opacity: 1,
+            left: '0',
+            width: '20%',
+            }, 500, function() {
+            // Animation complete.
+          });
+            $('.open-intro').hide();
+            $('.close-intro').show();
+        });
 
 
-$('.close-intro').click(function() {
-    $('.detailsTab').animate({
-    //opacity: 0.25,
-    left: '-225',
-    width: '0px',
-  }, 400, function() {
-    // Animation complete.
-  });
-    $('.open-intro').show();
-    $('.open-intro').css('left' , '225px');
-    $('.close-intro').hide();
-});
+        $('.close-intro').click(function() {
+            $('.detailsTab').animate({
+            //opacity: 0.25,
+            left: '-225',
+            width: '0px',
+          }, 400, function() {
+            // Animation complete.
+          });
+            $('.open-intro').show();
+            $('.open-intro').css('left' , '225px');
+            $('.close-intro').hide();
+        });
+
+        function populateAnnotationsList(features) {
+            var listEl = document.getElementById('annotationList');
+
+            var populateList = function(arr){
+                var str = '';
+                var panId = 0;
+                for(var i = 0; i < arr.length; i++){
+                    panId = i % 3;
+                    str += '<li><span>' + arr[i].properties.title + '<img src="http://www.astratr.com/forum/uploads/3KWA4MKY1AMR.jpg" class="annotation-comments-ico" data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id +'" /><img src="https://image.flaticon.com/icons/png/128/105/105731.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
+                }
+                return str;
+            }
+
+            listEl.innerHTML = populateList(features);
+        }
+
+        function filterAnnotationsList() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("annotationSearchBox");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("annotationList");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+
+                }
+            }
+        }
+
+        var disqus_config = function () {
+            this.page.url = window.location.href + "/polavaram";
+            this.page.identifier = "12345678";
+        };
+        (function() {  // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            
+            s.src = 'https://xyzinnovations.disqus.com/embed.js';
+            
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+        var reset = function (newIdentifier, newUrl, newTitle, newLanguage) {
+            DISQUS.reset({
+                reload: true,
+                config: function () {
+                    this.page.identifier = newIdentifier;
+                    this.page.url = window.location.href + "/" + newUrl;
+                }
+            });
+        };
 
     </script>
-
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
 </body>
 
 </html>
