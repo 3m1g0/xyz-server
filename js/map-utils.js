@@ -8,6 +8,7 @@ function uploadFeatures(feature) {
         success: function(data) {
             geoJSON.features.push(changeCoordinatesForPoint(data));
             console.log("Data added!");
+            populateAnnotationsList(geoJSON.features);
         }
     });
 }
@@ -25,6 +26,7 @@ function updateFeatures(feature) {
             var index = featureIds.indexOf(feature.id);
             geoJSON.features[index] = changeCoordinatesForPoint(data);
             console.log("Data updated!", data);
+            populateAnnotationsList(geoJSON.features);
         }
     });
 }
@@ -37,6 +39,12 @@ function deleteFeatures(feature) {
         dataType: "json",
         success: function(data) {
             console.log("Data deleted!", data);
+            var index = featureIds.indexOf(feature.id);
+            if (index !== -1) {
+                featureIds.splice(index, 1);
+                geoJSON.features.splice(index, 1);
+                populateAnnotationsList(geoJSON.features);
+            }
         }
     });
 }
@@ -60,6 +68,14 @@ function changeCoordinatesForPoints() {
         if(geoJSON.features[i].geometry.type === 'Point') {
             var coordinatesArray = geoJSON.features[i].geometry.coordinates;
             geoJSON.features[i].geometry.coordinates = [coordinatesArray[0][0][0], coordinatesArray[1][0][0]];
+        }
+    }
+}
+
+function getLocalIdForFeatureId(id) {
+    for(var i = 0; i < geoJSON.features.length; i++) {
+        if(geoJSON.features[i]._id === id) {
+            return featureIds[i];
         }
     }
 }

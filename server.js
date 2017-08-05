@@ -1,4 +1,5 @@
 var express = require('express'),
+  cors = require('cors'),
   port = process.env.PORT || 3000,
   http = require('http').Server(app),
   bodyParser = require('body-parser'),
@@ -10,11 +11,13 @@ var express = require('express'),
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://xyzserver:xyzserver@ds127443.mlab.com:27443/heroku_hjlz1cm3');
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/js', express.static('js'))
-app.use('/css', express.static('css'))
-app.use('/panoramas', express.static('panoramas'))
+app.use('/js', express.static('js'));
+app.use('/css', express.static('css'));
+app.use('/res', express.static('res'));
+app.use('/panoramas', express.static('panoramas'));
 
 app.get('/index', function(req, res){
   res.sendFile(__dirname + '/html/index.html');

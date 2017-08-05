@@ -12,11 +12,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="https://mdbootstrap.com/live/_MDB/css/compiled.min.css" rel="stylesheet">
-    <meta charset='utf-8' />
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.css' type='text/css'/>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='../css/mapbox-gl-draw.css' type='text/css'rel='stylesheet' />
+    <link href='../css/mapbox-gl.css' rel='stylesheet' />
     <link href='../css/map-page.css' rel='stylesheet' />
-    <link rel="stylesheet" href="https://cdn.pannellum.org/2.3/pannellum.css"/>
+    <link href="../css/pannellum.css" rel="stylesheet" />
     <style>
         #map { position:absolute; left:0; top:62px; bottom:0; width:100%; }
     </style>
@@ -74,6 +73,11 @@
             padding-left: 15px;
             width:75%;
         }
+        #baseRange{
+            display: inline-block;
+            padding-left: 15px;
+            width:75%;
+        }
         .opacityOptions .opaOpt{
             border-bottom: 1px solid #eee;
             padding-bottom: 25px;
@@ -94,7 +98,7 @@
         }
 
         #annotationSearchBox {
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCIVl4z_5ltQZNpXhZpAqOrtnUQO5ibqx9bf67n_rsXpMlFT6w'); /* Add a search icon to input */
+            background-image: url('../res/search.png'); /* Add a search icon to input */
             background-position: 10px 16px; /* Position the search icon */
             background-repeat: no-repeat; /* Do not repeat the icon image */
             width: 75%; /* Full-width */
@@ -115,6 +119,17 @@
             border: 1px solid #ddd; /* Add a border to all links */
             margin-top: -1px; /* Prevent double borders */
             background-color: #ffffff; /* Grey background color */
+            padding: 12px; /* Add some padding */
+            text-decoration: none; /* Remove default text underline */
+            font-size: 12px; /* Increase the font-size */
+            color: #4A4A4A; /* Add a black text color */
+            display: block; /* Make it into a block element to fill the whole list */
+        }
+
+        #annotationList li span.active {
+            border: 1px solid #ddd; /* Add a border to all links */
+            margin-top: -1px; /* Prevent double borders */
+            background-color: #e2e2e2; /* Grey background color */
             padding: 12px; /* Add some padding */
             text-decoration: none; /* Remove default text underline */
             font-size: 12px; /* Increase the font-size */
@@ -169,12 +184,12 @@
         }
     </style>
 
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.0/mapbox-gl.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
     <script type="text/javascript" src="../js/map-utils.js"></script>
-    <script type="text/javascript" src="https://cdn.pannellum.org/2.3/pannellum.js"></script>
+    <script type="text/javascript" src="../js/pannellum.js"></script>
 </head>
 
 <body class="fixed-sn light-blue-skin bg-skin-lp">
@@ -272,20 +287,20 @@
                     <a class="nav-link"><i class="fa fa-envelope"></i> <span class="hidden-sm-down">Contact</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"><i class="fa fa-comments-o"></i> <span class="hidden-sm-down">Support</span></a>
+                    <!-- <a class="nav-link"><i class="fa fa-comments-o"></i> <span class="hidden-sm-down">Support</span></a> -->
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"><i class="fa fa-user"></i> <span class="hidden-sm-down">Account</span></a>
+                    <!-- <a class="nav-link"><i class="fa fa-user"></i> <span class="hidden-sm-down">Account</span></a> -->
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown
                     </a>
                     <div class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="#">Action</a>
                         <a class="dropdown-item" href="#">Another action</a>
                         <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    </div> -->
                 </li>
             </ul>
         </nav>
@@ -302,28 +317,28 @@
                 <div class='map-overlay-inner opacityOptions'>
                     <div class="opaOpt">
                         <fieldset class="form-group">
-                            <input type="checkbox" class="filled-in" id="checkbox1">
-                            <label for="checkbox1">Orthomosiac</label>
+                            <input type="checkbox" class="filled-in" checked="checked" id="orthoCheckbox">
+                            <label for="orthoCheckbox">Orthomosiac</label>
                         </fieldset>
                         <span>Opacity</span>
                         <form id="orthoRange" class="range-field">
-                            <input type="range" min="0" max="100" />
+                            <input type="range" min="0" max="100" value="100" />
                         </form>
                     </div>
                     <div class="opaOpt">
                         <fieldset class="form-group">
-                            <input type="checkbox" class="filled-in" id="checkbox2">
-                            <label for="checkbox2">Basemap</label>
+                            <input type="checkbox" class="filled-in" checked="checked" id="baseCheckbox">
+                            <label for="baseCheckbox">Basemap</label>
                         </fieldset>
                         <span>Opacity</span>
                         <form id="baseRange" class="range-field">
-                            <input type="range" min="0" max="100" />
+                            <input type="range" min="0" max="100" value="100" />
                         </form>
                     </div>
                     <div class="opaOpt">
                         <fieldset class="form-group">
-                            <input type="checkbox" class="filled-in" id="checkbox0">
-                            <label for="checkbox0">Annotations</label>
+                            <input type="checkbox" class="filled-in" checked="checked" id="annoCheckbox">
+                            <label for="annoCheckbox">Annotations</label>
                         </fieldset>
                         <form role="form">
                             <input type="text" id="annotationSearchBox" onkeyup="filterAnnotationsList()" placeholder="Search for annotations..">
@@ -496,6 +511,7 @@
         map.on('draw.update', function (e) {
             if(e.features.length > 0) {
                 updateFeatures(e.features[0]);
+                populateAnnotationsList(geoJSON.features);
             }
         });
 
@@ -529,9 +545,13 @@
                         $('#selectedAnno #annoLocation').text("Loctaion : " + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3));
                         $('#annoLocation').show();
                     }
+                    console.log(feature);
+                    $('#annotationList li span').removeClass("active");
+                    $('#annoListItem' + feature._id).addClass("active");
                 }
+            } else {
+                $('#annotationList li span').removeClass("active");
             }
-
         });
         
         map.on('load', function(e) {
@@ -557,8 +577,6 @@
         $('#basicExample').on('show.bs.modal', function(e) {
             var annotationId = $(e.relatedTarget).data('id');
             reset(annotationId, annotationId);
-            console.log(annotationId);
-            //$(e.currentTarget).find('input[name="bookId"]').val(bookId);
         });
 
         $('#panoramaModal').on('show.bs.modal', function(e) {
@@ -575,12 +593,10 @@
         $('#modalSubscription').on('hidden.bs.modal', function (e1) {
             if(isSubmitClicked && $('#annotationTitleField').val() != '') {
                 if(currentFeature != undefined) {
-                    console.log('Coming here ' + currentFeature.id);
                     featureIds.push(currentFeature.id);
                     currentFeature.properties.title = $('#annotationTitleField').val();
                     currentFeature.properties.description = $('#annotationDescField').val();
                     uploadFeatures(currentFeature);
-                    populateAnnotationsList(geoJSON.features);
                 }
             } else {
                 draw.delete([currentFeature.id]);
@@ -619,6 +635,39 @@
             $('.close-intro').hide();
         });
 
+        var orthomosaicSlider = document.querySelector('#orthoRange');
+        orthomosaicSlider.addEventListener('input', function(e) {
+            map.setPaintProperty('polavaram', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+        });
+
+        var satelliteSlider = document.querySelector('#baseRange');
+        satelliteSlider.addEventListener('input', function(e) {
+            map.setPaintProperty('satellite', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+        });
+
+        $('input#orthoCheckbox').change(function () {
+            if ($('input#orthoCheckbox').is(':checked')) {
+                map.setLayoutProperty('polavaram', 'visibility', 'visible');
+            } else {
+                map.setLayoutProperty('polavaram', 'visibility', 'none');
+            }
+        });
+
+        $('input#baseCheckbox').change(function () {
+            if ($('input#baseCheckbox').is(':checked')) {
+                map.setLayoutProperty('satellite', 'visibility', 'visible');
+            } else {
+                map.setLayoutProperty('satellite', 'visibility', 'none');
+            }
+        });
+
+        function annotationItemClick(id) {
+            var myId = id.replace('annoListItem', '');
+            $('#annotationList li span').removeClass("active");
+            $('#annoListItem' + myId).addClass("active");
+            draw.changeMode('simple_select', {'featureIds' : [getLocalIdForFeatureId(myId)]});
+        }
+
         function populateAnnotationsList(features) {
             var listEl = document.getElementById('annotationList');
 
@@ -627,7 +676,7 @@
                 var panId = 0;
                 for(var i = 0; i < arr.length; i++){
                     panId = i % 3;
-                    str += '<li><span>' + arr[i].properties.title + '<img src="http://www.astratr.com/forum/uploads/3KWA4MKY1AMR.jpg" class="annotation-comments-ico" data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id +'" /><img src="https://image.flaticon.com/icons/png/128/105/105731.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
+                    str += '<li><span id="annoListItem' + (arr[i]._id) + '" onClick="annotationItemClick(this.id)">' + arr[i].properties.title + '<img src="../res/comments.jpg" class="annotation-comments-ico" data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id +'" /><img src="../res/panorama.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
                 }
                 return str;
             }
@@ -636,14 +685,14 @@
         }
 
         function filterAnnotationsList() {
-            var input, filter, ul, li, a, i;
+            var input, filter, ul, li, span, i;
             input = document.getElementById("annotationSearchBox");
             filter = input.value.toUpperCase();
             ul = document.getElementById("annotationList");
             li = ul.getElementsByTagName("li");
             for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("a")[0];
-                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                span = li[i].getElementsByTagName("span")[0];
+                if (span.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     li[i].style.display = "";
                 } else {
                     li[i].style.display = "none";

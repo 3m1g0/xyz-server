@@ -55,6 +55,7 @@ exports.delete_a_annotation = function(req, res) {
       return res.send(err);
     res.json({
       message: 'Annotation successfully deleted'
+      
     });
   });
 };
