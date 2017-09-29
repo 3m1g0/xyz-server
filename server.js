@@ -23,8 +23,12 @@ app.get('/index', function(req, res){
   res.sendFile(__dirname + '/html/index.html');
 });
 
-app.get('/', function(req, res){
+app.get('/home', function(req, res){
   res.sendFile(__dirname + '/html/home.html');
+});
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/html/drone.html');
 });
 
 var routes = require('./api/routes/annotationRoutes');
