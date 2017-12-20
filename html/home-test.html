@@ -113,8 +113,6 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
-			max-height: 200px;
-			overflow-y: scroll;
         }
 
         #annotationList li span {
@@ -579,7 +577,9 @@
         });
 
         $('#basicExample').on('show.bs.modal', function(e) {
-            var annotationId = $(e.relatedTarget).data('id');
+			console.log("ebt");
+		    console.log($('#annotationList').find('li .active')[0]);
+            var annotationId = $('#annotationList').find('li .active')[0].id.replace('annoListItem', '');
             reset(annotationId, annotationId);
         });
 
@@ -679,10 +679,13 @@
         });
 
         function annotationItemClick(id) {
+			$('#basicExample').modal('hide');
             var myId = id.replace('annoListItem', '');
             $('#annotationList li span').removeClass("active");
             $('#annoListItem' + myId).addClass("active");
+			
             draw.changeMode('simple_select', {'featureIds' : [getLocalIdForFeatureId(myId)]});
+			$('#basicExample').modal('show');
         }
 
         function populateAnnotationsList(features) {
@@ -693,7 +696,7 @@
                 var panId = 0;
                 for(var i = 0; i < arr.length; i++){
                     panId = i % 3;
-                    str += '<li><span id="annoListItem' + (arr[i]._id) + '" onClick="annotationItemClick(this.id)">' + arr[i].properties.title + '<img src="../res/comments.jpg" class="annotation-comments-ico" data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id +'" /><img src="../res/panorama.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
+                    str += '<li ><span id="annoListItem'+(arr[i]._id)+'" onClick="annotationItemClick(this.id)">' + arr[i].properties.title + '<img src="../res/comments.jpg" class="annotation-comments-ico"  /><img src="../res/panorama.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
                 }
                 return str;
             }
