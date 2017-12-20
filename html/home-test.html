@@ -113,8 +113,6 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
-			max-height: 200px;
-			overflow-y: scroll;
         }
 
         #annotationList li span {
@@ -192,7 +190,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
-    <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl.js'></script>
     <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
     <script type="text/javascript" src="../js/map-utils.js"></script>
     <script type="text/javascript" src="../js/pannellum.js"></script>
@@ -328,7 +326,7 @@
                         </fieldset>
                         <span>Opacity</span>
                         <form id="orthoRange" class="range-field">
-                            <input type="range" min="0" max="3" value="0" />
+                            <input type="range" min="0" max="100" value="100" />
                         </form>
                     </div>
                     <div class="opaOpt">
@@ -455,8 +453,8 @@
     </script>
 
     <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
-        var tileset = 'developerxyz.4bp49zqb';
+        mapboxgl.accessToken = 'pk.eyJ1Ijoia3R0aGVhbG1pZ2h0eSIsImEiOiJjajRlZTd0aTkwMjNyMndwcTkxb2ZvcWM1In0.UQPL-sMo5nj0qQLNHmgpaA';
+        var tileset = 'ktthealmighty.bestvvxl';
         var map = new mapboxgl.Map({
             container: 'map', // container id
             style: {
@@ -467,24 +465,9 @@
                         "url": "mapbox://" + "mapbox.satellite",
                         "tileSize": 256
                     },
-                    "raster-tiles1": {
+                    "raster-tiles": {
                         "type": "raster",
                         "url": "mapbox://" + tileset,
-                        "tileSize": 256
-                    },
-                    "raster-tiles2": {
-                        "type": "raster",
-                        "url": "mapbox://" + "developerxyz.ay58n3um",
-                        "tileSize": 256
-                    },
-                    "raster-tiles3": {
-                        "type": "raster",
-                        "url": "mapbox://" + "developerxyz.1q6j39re",
-                        "tileSize": 256
-                    },
-                    "raster-tiles4": {
-                        "type": "raster",
-                        "url": "mapbox://" + "developerxyz.9ohz1fb1",
                         "tileSize": 256
                     }
                 },
@@ -494,9 +477,16 @@
                     "source": "satellite-tiles",
                     "minzoom": 0,
                     "maxzoom": 22
+                },
+                {
+                    "id": "polavaram",
+                    "type": "raster",
+                    "source": "raster-tiles",
+                    "minzoom": 0,
+                    "maxzoom": 22
                 }]
             },
-            center: [6.565,46.523], // starting position
+            center: [81.638, 17.290], // starting position
             zoom: 16 // starting zoom
         });
 
@@ -565,10 +555,6 @@
                 $('#annotationList li span').removeClass("active");
             }
         });
-
-        var layers;
-        var currIndex = 0;
-        var index = 1;
         
         map.on('load', function(e) {
               map.loadImage('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678135-sticky-note-128.png', function(error, image) {
@@ -587,29 +573,13 @@
                         populateAnnotationsList(geoJSON.features);
                     }
                 });
-                $.ajax({
-                    type: 'GET',
-                    url: 'http://www.mocky.io/v2/5a36666d2f00006009127aab',
-                    contentType: "application/json",
-                    dataType: "json",
-                    success: function(data) {
-                        layers = data;
-                        map.addLayer(data[0]);
-                        // window.setInterval(function() {
-                        //     console.log(layers[currIndex % 4]);
-                        //     map.removeLayer(layers[currIndex % 4].id);
-                        //     map.addLayer(layers[index % 4]);
-                        //     currIndex++;
-                        //     index++;
-                        // }, 2000);
-                        
-                    }
-                });
             });
         });
 
         $('#basicExample').on('show.bs.modal', function(e) {
-            var annotationId = $(e.relatedTarget).data('id');
+			console.log("ebt");
+		    console.log($('#annotationList').find('li .active')[0]);
+            var annotationId = $('#annotationList').find('li .active')[0].id.replace('annoListItem', '');
             reset(annotationId, annotationId);
         });
 
@@ -684,11 +654,7 @@
 
         var orthomosaicSlider = document.querySelector('#orthoRange');
         orthomosaicSlider.addEventListener('input', function(e) {
-            // map.setPaintProperty('polavaram', 'raster-opacity', parseInt(e.target.value, 10) / 100);
-            console.log(parseInt(e.target.value, 10));
-            map.removeLayer(layers[currIndex].id);
-            currIndex = parseInt(e.target.value, 10);
-            map.addLayer(layers[currIndex]);
+            map.setPaintProperty('polavaram', 'raster-opacity', parseInt(e.target.value, 10) / 100);
         });
 
         var satelliteSlider = document.querySelector('#baseRange');
@@ -713,10 +679,13 @@
         });
 
         function annotationItemClick(id) {
+			$('#basicExample').modal('hide');
             var myId = id.replace('annoListItem', '');
             $('#annotationList li span').removeClass("active");
             $('#annoListItem' + myId).addClass("active");
+			
             draw.changeMode('simple_select', {'featureIds' : [getLocalIdForFeatureId(myId)]});
+			$('#basicExample').modal('show');
         }
 
         function populateAnnotationsList(features) {
@@ -727,7 +696,7 @@
                 var panId = 0;
                 for(var i = 0; i < arr.length; i++){
                     panId = i % 3;
-                    str += '<li><span id="annoListItem' + (arr[i]._id) + '" onClick="annotationItemClick(this.id)">' + arr[i].properties.title + '<img src="../res/comments.jpg" class="annotation-comments-ico" data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id +'" /><img src="../res/panorama.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
+                    str += '<li ><span id="annoListItem'+(arr[i]._id)+'" onClick="annotationItemClick(this.id)">' + arr[i].properties.title + '<img src="../res/comments.jpg" class="annotation-comments-ico"  /><img src="../res/panorama.png" class="annotation-panorama-ico" data-target="#panoramaModal" data-toggle="modal" data-tooltip="tooltip" title="Panorama View" data-id="' + (panId + 1) +'"/></span></li>';
                 }
                 return str;
             }
