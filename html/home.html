@@ -195,12 +195,8 @@
 			height: auto !important;
 		}
 
-        .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl{
-            display: inline-flex;
-        }
     </style>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script>
     <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script>
@@ -617,13 +613,6 @@
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
 
-        map.addControl(new mapboxgl.FullscreenControl());
-
-        map.addControl(new mapboxgl.ScaleControl({
-            maxWidth: 80,
-            unit: 'imperial'
-        }));
-
         var draw = new MapboxDraw({
             displayControlsDefault: false,
             controls: {
@@ -632,13 +621,14 @@
                 trash: true
             }
         });
-        map.addControl(draw, 'bottom-right');
+        map.addControl(draw);
         var featureIds;
         var geoJSON;
         var currentFeature;
         var isSubmitClicked = false;
         map.on('draw.create', function (e) {
             currentFeature = e.features[0];
+            jQuery.noConflict(); 
             $('#modalSubscription').modal('show');
         });
 
@@ -716,7 +706,8 @@
                     dataType: "json",
                     success: function(data) {
                         layers = data;
-                        map.addLayer(data[0]);
+                        console.log(getDrawLaterId());
+                        map.addLayer(data[0], getDrawLaterId());
                         // window.setInterval(function() {
                         //     console.log(layers[currIndex % 4]);
                         //     map.removeLayer(layers[currIndex % 4].id);
@@ -760,6 +751,7 @@
         })
         $('#newAnnoSubmit').on('click', function() {
             if($('#annotationTitleField').val() != '') {
+                jQuery.noConflict(); 
                 $("#modalSubscription").modal('hide');
                 isSubmitClicked = true;
             }
@@ -810,7 +802,7 @@
             console.log(parseInt(e.target.value, 10));
             map.removeLayer(layers[currIndex].id);
             currIndex = parseInt(e.target.value, 10);
-            map.addLayer(layers[currIndex]);
+            map.addLayer(layers[currIndex], getDrawLaterId());
         });
 
         var satelliteSlider = document.querySelector('#baseRange');
@@ -820,9 +812,9 @@
 
         $('input#orthoCheckbox').change(function () {
             if ($('input#orthoCheckbox').is(':checked')) {
-                map.setLayoutProperty('polavaram', 'visibility', 'visible');
+                map.setLayoutProperty(layers[currentIndex].id, 'visibility', 'visible');
             } else {
-                map.setLayoutProperty('polavaram', 'visibility', 'none');
+                map.setLayoutProperty(layers[currentIndex].id, 'visibility', 'none');
             }
         });
 
@@ -848,6 +840,11 @@
             $('#annotationList li span').removeClass("active");
             $('#annoListItem' + myId).addClass("active");
             draw.changeMode('simple_select', {'featureIds' : [getLocalIdForFeatureId(myId)]});
+            map.flyTo({
+                center: [
+                    -74.50 + (Math.random() - 0.5) * 10,
+                    40 + (Math.random() - 0.5) * 10]
+            });
         }
 
         function populateAnnotationsList(features) {
@@ -906,12 +903,25 @@
             });
         };
 
+        var getDrawLaterId = function() {
+            var mapLayers = map.getStyle().layers;
+            // Find the index of the first symbol layer in the map style
+            var firstSymbolId;
+            for (var i = 0; i < mapLayers.length; i++) {
+                if(mapLayers[i].id.startsWith('gl-draw-')) {
+                    firstSymbolId = mapLayers[i].id;
+                    break;
+                }
+            }
+            return firstSymbolId;
+        }
+
     </script>
     <script>
         $('.events ol>li>a').on('click', function(e) {
             map.removeLayer(layers[currIndex].id);
             currIndex = (currIndex + 1 ) % 4;
-            map.addLayer(layers[currIndex]);
+            map.addLayer(layers[currIndex], getDrawLaterId());
         });
     </script>
     <script src="js/jquery-2.1.4.js"></script>
