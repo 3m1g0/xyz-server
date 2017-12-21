@@ -8,16 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>XYZ Innovations</title>
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Fira+Sans:400,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
     <link href="https://mdbootstrap.com/live/_MDB/css/compiled.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" media="all" href="//fast.cometondemand.net/50218x_xf88ed.css" />
     <link href='../css/mapbox-gl-draw.css' type='text/css'rel='stylesheet' />
     <link href='../css/mapbox-gl.css' rel='stylesheet' />
     <link href='../css/map-page.css' rel='stylesheet' />
     <link href="../css/pannellum.css" rel="stylesheet" />
     <style>
-        #map { position:absolute; left:0; top:62px; bottom:0; width:100%; }
+        #map { position:absolute; left:0; top:20px; bottom:0; width:100%; }
     </style>
 
     <style>
@@ -29,7 +35,7 @@
         }
 		.detailsTab{
 			position:absolute;
-			top:62px;
+			top:56px;
 			bottom:0;
 			width:20%;
 			z-index:99999;
@@ -188,14 +194,20 @@
 		.modal .modal-full-height{
 			height: auto !important;
 		}
+
+        .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl{
+            display: inline-flex;
+        }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script>
+    <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script>
     <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
     <script type="text/javascript" src="../js/map-utils.js"></script>
     <script type="text/javascript" src="../js/pannellum.js"></script>
+    <script src="js/modernizr.js"></script> <!-- Modernizr -->
 </head>
 
 <body class="fixed-sn light-blue-skin bg-skin-lp">
@@ -323,6 +335,12 @@
                 <div class='map-overlay-inner opacityOptions'>
                     <div class="opaOpt">
                         <fieldset class="form-group">
+                            <input type="checkbox" class="filled-in" id="timelineCheckbox">
+                            <label for="timelineCheckbox">Timeline</label>
+                        </fieldset>
+                    </div>
+                    <div class="opaOpt">
+                        <fieldset class="form-group">
                             <input type="checkbox" class="filled-in" checked="checked" id="orthoCheckbox">
                             <label for="orthoCheckbox">Orthomosiac</label>
                         </fieldset>
@@ -358,8 +376,8 @@
         </div>
 		<main>
 			
-			<div id='map'></div>   
-			
+			<div id='map'></div>
+
 		</main>
 	</div>
     <!--/Main layout-->
@@ -437,6 +455,96 @@
         </div>
         <!-- Modal Message-->
 
+        <!-- Modal Message-->
+        <div class="modal fade bottom" id="timelineModal" tabindex="-1" role="dialog" aria-labelledby="timelineModal" aria-hidden="true">
+            <div class="modal-dialog modal-full-height modal-bottom" role="document">
+                <!--Content-->
+                <div class="modal-content">
+                    <!--Body-->
+                    <div class="modal-body">
+                        <section class="cd-horizontal-timeline">
+                            <div class="timeline">
+                                <div class="events-wrapper">
+                                    <div class="events">
+                                        <ol>
+                                            <li><a href="#0" data-date="16/01/2014" class="selected">16 Jan</a></li>
+                                            <li><a href="#0" data-date="28/02/2014">28 Feb</a></li>
+                                            <li><a href="#0" data-date="20/04/2014">20 Mar</a></li>
+                                            <li><a href="#0" data-date="20/05/2014">20 May</a></li>
+                                            <li><a href="#0" data-date="09/07/2014">09 Jul</a></li>
+                                            <li><a href="#0" data-date="30/08/2014">30 Aug</a></li>
+                                            <li><a href="#0" data-date="15/09/2014">15 Sep</a></li>
+                                            <li><a href="#0" data-date="01/11/2014">01 Nov</a></li>
+                                            <li><a href="#0" data-date="10/12/2014">10 Dec</a></li>
+                                            <li><a href="#0" data-date="19/01/2015">29 Jan</a></li>
+                                            <li><a href="#0" data-date="03/03/2015">3 Mar</a></li>
+                                        </ol>
+
+                                        <span class="filling-line" aria-hidden="true"></span>
+                                    </div> <!-- .events -->
+                                </div> <!-- .events-wrapper -->
+                                    
+                                <ul class="cd-timeline-navigation">
+                                    <li><a href="#0" class="prev inactive">Prev</a></li>
+                                    <li><a href="#0" class="next">Next</a></li>
+                                </ul> <!-- .cd-timeline-navigation -->
+                            </div> <!-- .timeline -->
+
+                            <div class="events-content">
+                                <ol>
+                                    <li class="selected" data-date="16/01/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="28/02/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="20/04/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="20/05/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="09/07/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="30/08/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="15/09/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="01/11/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="10/12/2014">
+                                        
+                                    </li>
+
+                                    <li data-date="19/01/2015">
+                                        
+                                    </li>
+
+                                    <li data-date="03/03/2015">
+                                        
+                                    </li>
+                                </ol>
+                            </div> <!-- .events-content -->
+                        </section>
+                    </div>
+                </div>
+                <!--/.Content-->
+            </div>
+        </div>
+        <!-- Modal Message-->
+
     <!-- SCRIPTS -->
     <!-- JQuery -->
     <script type="text/javascript" src="https://mdbootstrap.com/live/_MDB/js/compiled.min.js"></script>
@@ -452,6 +560,12 @@
         
         new WOW().init();
     
+    </script>
+
+    <script>
+        var chat_name = 'USER1';
+        var chat_id = 'LOGGEDIN_USERS_UNIQUE_ID';
+
     </script>
 
     <script>
@@ -502,6 +616,14 @@
 
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
+
+        map.addControl(new mapboxgl.FullscreenControl());
+
+        map.addControl(new mapboxgl.ScaleControl({
+            maxWidth: 80,
+            unit: 'imperial'
+        }));
+
         var draw = new MapboxDraw({
             displayControlsDefault: false,
             controls: {
@@ -510,7 +632,7 @@
                 trash: true
             }
         });
-        map.addControl(draw);
+        map.addControl(draw, 'bottom-right');
         var featureIds;
         var geoJSON;
         var currentFeature;
@@ -704,6 +826,15 @@
             }
         });
 
+        $('input#timelineCheckbox').change(function () {
+            console.log('testing');
+            if ($('input#timelineCheckbox').is(':checked')) {
+                console.log('checked');
+                jQuery.noConflict(); 
+                $('#timelineModal').modal('show');
+            }
+        });
+
         $('input#baseCheckbox').change(function () {
             if ($('input#baseCheckbox').is(':checked')) {
                 map.setLayoutProperty('satellite', 'visibility', 'visible');
@@ -776,6 +907,16 @@
         };
 
     </script>
+    <script>
+        $('.events ol>li>a').on('click', function(e) {
+            map.removeLayer(layers[currIndex].id);
+            currIndex = (currIndex + 1 ) % 4;
+            map.addLayer(layers[currIndex]);
+        });
+    </script>
+    <script src="js/jquery-2.1.4.js"></script>
+    <script src="js/jquery.mobile.custom.min.js"></script>
+    <script src="js/main.js"></script> <!-- Resource jQuery -->
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
     <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
 </body>

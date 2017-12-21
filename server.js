@@ -31,6 +31,10 @@ app.get('/home-test', function(req, res){
   res.sendFile(__dirname + '/html/home-test.html');
 });
 
+app.get('/compare', function(req, res){
+  res.sendFile(__dirname + '/html/compare.html');
+});
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/html/drone.html');
 });
