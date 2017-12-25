@@ -122,6 +122,10 @@
         animation: sk-scaleout 1.0s infinite ease-in-out;
     }
 
+    .sidebar-menu .sidebar-link.active:before {
+        background: none !important;
+    }
+
     @-webkit-keyframes sk-scaleout {
         0% {
             -webkit-transform: scale(0)
@@ -550,6 +554,12 @@
         });
 
         var map = new mapboxgl.Compare(beforeMap, afterMap, {});
+
+        setInterval(function(){ 
+            var source = afterMap.getSource('raster-tiles')
+            source.url = ('mapbox://' + beforeTileset);
+            afterMap.styles.sources['raster-tiles'].reload();
+        }, 3000);
 
     </script>
     <script type="text/javascript " src="../js/vendor.js "></script>
