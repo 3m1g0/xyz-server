@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Google Maps</title>
+    <title>Orthomosaics</title>
     <style>
     #loader {
         transition: all 0.3s ease-in-out;
@@ -231,20 +231,12 @@
                 </div>
                 <!-- ### $Sidebar Menu ### -->
                 <ul class="sidebar-menu scrollable pos-r">
-                    <li class="nav-item mT-30 active">
-                        <a class='sidebar-link' href="#" default>
-                <span class="icon-holder">
-                  <i class="c-blue-500 ti-home"></i>
-                </span>
-                <span class="title">Dashboard</span>
-              </a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle" href="javascript:void(0);">
                 <span class="icon-holder">
-                    <i class="c-purple-500 ti-map"></i>
+                    <i class="c-blue-500 ti-home"></i>
                   </span>
-                <span class="title">Maps</span>
+                <span class="title">Dashboard</span>
                 <span class="arrow">
                     <i class="ti-angle-right"></i>
                   </span>
@@ -254,7 +246,41 @@
                                 <a href="orthomosaic">Orthomosaic</a>
                             </li>
                             <li>
-                                <a href="vector-maps.html">3D</a>
+                                <a href="3d">3D</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-pink-500 ti-palette"></i>
+                  </span>
+                <span class="title">Opacity</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="opaOpt">
+                                    <fieldset class="form-group">
+                                        <input type="checkbox" class="filled-in" checked="checked" id="orthoCheckbox">
+                                        <a class='sidebar-link' href="#" for="orthoCheckbox">Orthomosiac</a>
+                                    </fieldset>
+                                    <form id="orthoRange" class="range-field">
+                                        <input type="range" min="0" max="100" value="100" />
+                                    </form>
+                                    
+                                </div>
+                            </li>
+                            <li>
+                                <fieldset class="form-group">
+                                    <input type="checkbox" class="filled-in" checked="checked" id="baseCheckbox">
+                                    <a class='sidebar-link' href="#" for="baseCheckbox">Basemap</a>
+                                </fieldset>
+                                <form id="baseRange" class="range-field">
+                                    <input type="range" min="0" max="100" value="100" />
+                                </form>
                             </li>
                         </ul>
                     </li>
@@ -510,7 +536,7 @@
                 <div class="container-fluid p-0" style="height: 180px; width: calc(100% - 70px); position: absolute !important; margin-top: 63px; text-align: center;">
                     <div id="demo" class="collapse" style="background-color: rgba(62, 60, 60, 0.9); padding:10px">
                         <div class="owl-carousel" id="timeline-carousel">
-                            <div style="background-color: #FFF" onclick="timelineClick('1')" ">
+                            <div style="background-color: #FFF" onclick="timelineClick('1')">
                                 <img src="../res/developerxyz.4bp49zqb.png" />
                                 <div>
                                     3rd Jan
@@ -531,7 +557,7 @@
                             <div style="background-color: #FFF" onclick="timelineClick('4')" >
                                 <img src="../res/developerxyz.1q6j39re.png" />
                                 <div>
-                                    4th Apr
+                                    8th Apr
                                 </div>
                             </div>
                             <div style="background-color: #FFF" onclick="timelineClick('5')" >
@@ -731,7 +757,8 @@
             "maxzoom": 22
           }
         ];
-    var currIndex = 0;
+    
+    var opacity = 100;
 
     var tilesets = ['developerxyz.4bp49zqb','developerxyz.97ii82hq','developerxyz.8sv2sr03','developerxyz.1q6j39re','developerxyz.9ohz1fb1','developerxyz.ay58n3um','developerxyz.3wbs9pyc','developerxyz.14okwdi4','developerxyz.bm55h55w','developerxyz.a5yr0pkg','developerxyz.7dp1qa5b'];
 
@@ -963,6 +990,7 @@
     $('#modalSubscription').on('show.bs.modal', function(e1) {
         $(this).find("text,input,textarea,select").val('').end();
     });
+
     $('#modalSubscription').on('hidden.bs.modal', function(e1) {
         if (isSubmitClicked && $('#annotationTitleField').val() != '') {
             if (currentFeature != undefined) {
@@ -975,6 +1003,7 @@
             draw.delete([currentFeature.id]);
         }
     })
+
     $('#newAnnoSubmit').on('click', function() {
         if ($('#annotationTitleField').val() != '') {
             // jQuery.noConflict();
@@ -983,16 +1012,28 @@
         }
     });
 
+    var orthomosaicSlider = document.querySelector('#orthoRange');
+    orthomosaicSlider.addEventListener('input', function(e) {
+        opacity = parseInt(e.target.value, 10) / 100;
+        map.setPaintProperty(currentLayer, 'raster-opacity', parseInt(e.target.value, 10) / 100);
+    });
+
+    var satelliteSlider = document.querySelector('#baseRange');
+    satelliteSlider.addEventListener('input', function(e) {
+        map.setPaintProperty('satellite', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+    });
+
+
     function timelineClick(tileset) {
       map.removeLayer(currentLayer);
       var before = getDrawLaterId();
-      console.log(tileset + ' --- ' + before);
       currentLayer = tileset;
       if(before == undefined) {
         map.addLayer(layers[tileset - 1]);
-    } else {
+      } else {
         map.addLayer(layers[tileset - 1], getDrawLaterId());
-    }
+      }
+      map.setPaintProperty(currentLayer, 'raster-opacity', opacity);
     }
 
     function annotationItemClick(id) {
@@ -1009,7 +1050,8 @@
                 center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
             }
             map.flyTo({
-                center: center
+                center: center,
+                zoom: 16
             });
         }
     }

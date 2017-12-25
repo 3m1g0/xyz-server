@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Compare</title>
+    <title>Point Cloud</title>
     <style>
     #loader {
         transition: all 0.3s ease-in-out;
@@ -228,7 +228,7 @@
                 </div>
                 <!-- ### $Sidebar Menu ### -->
                 <ul class="sidebar-menu scrollable pos-r">
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown active">
                         <a class="dropdown-toggle" href="javascript:void(0);">
                 <span class="icon-holder">
                     <i class="c-blue-500 ti-home"></i>
@@ -243,12 +243,12 @@
                                 <a href="orthomosaic">Orthomosaic</a>
                             </li>
                             <li>
-                                <a href="3d">3D</a>
+                                <a href="#">3D</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item active">
-                        <a class='sidebar-link' href="#">
+                    <li class="nav-item">
+                        <a class='sidebar-link' href="compare">
                 <span class="icon-holder">
                   <i class="c-indigo-500 ti-bar-chart"></i>
                 </span>
@@ -481,10 +481,9 @@
             </div>
             <!-- ### $App Screen Content ### -->
             <main class='bgc-grey-100'>
-                <div id="before" class='map' style="height: calc(100% - 70px); width: calc(100% - 70px); position: absolute !important; margin-top: 65px;">
-                </div>
-                <div id="after" class='map' style="height: calc(100% - 70px); width: calc(100% - 70px); position: absolute !important; margin-top: 65px;">
-                </div>
+                <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://xyzinnotech.com/potree/vineeth1.html?output=embed" title="3d" style="height: calc(100% - 70px); width: calc(100% - 70px); position: absolute !important; margin-top: 65px;">
+                   <p>Your browser does not support iframes.</p>
+                </iframe>
             </main>
             <!-- Modal Message-->
             <!-- ### $App Screen Footer ### -->
@@ -494,64 +493,6 @@
         </div>
     </div>
     <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
-
-        var beforeTileset = 'developerxyz.ay58n3um';
-        var afterTileset = 'developerxyz.1q6j39re';
-
-        var beforeMap = new mapboxgl.Map({
-          container: 'before',
-          style: {
-            version: 8,
-            sources: {
-              'raster-tiles': {
-                type: 'raster',
-                url: 'mapbox://' + beforeTileset,
-                tileSize: 256
-              }
-            },
-            layers: [{
-              id: 'simple-tiles',
-              type: 'raster',
-              source: 'raster-tiles',
-              minzoom: 0,
-              maxzoom: 22
-            }]
-          },
-          center: [6.565,46.523],
-          zoom: 17
-        });
-
-        var afterMap = new mapboxgl.Map({
-          container: 'after',
-          style: {
-            version: 8,
-            sources: {
-              'raster-tiles': {
-                type: 'raster',
-                url: 'mapbox://' + afterTileset,
-                tileSize: 256
-              }
-            },
-            layers: [{
-              id: 'simple-tiles',
-              type: 'raster',
-              source: 'raster-tiles',
-              minzoom: 0,
-              maxzoom: 22
-            }]
-          },
-          center: [6.565,46.523],
-          zoom: 17
-        });
-
-        var map = new mapboxgl.Compare(beforeMap, afterMap, {});
-
-        // setInterval(function(){ 
-        //     var source = afterMap.getSource('raster-tiles')
-        //     source.url = ('mapbox://' + beforeTileset);
-        //     afterMap.styles.sources['raster-tiles'].reload();
-        // }, 3000);
 
     </script>
     <script type="text/javascript " src="../js/vendor.js "></script>

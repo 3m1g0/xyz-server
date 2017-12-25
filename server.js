@@ -35,6 +35,10 @@ app.get('/orthomosaic', function(req, res){
   res.sendFile(__dirname + '/html/orthomosaic.html');
 });
 
+app.get('/3d', function(req, res){
+  res.sendFile(__dirname + '/html/potree.html');
+});
+
 app.get('/compare', function(req, res){
   res.sendFile(__dirname + '/html/compare.html');
 });
