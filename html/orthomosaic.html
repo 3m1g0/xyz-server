@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Orthomosaics</title>
+    <title>Orthomosaic</title>
     <style>
     #loader {
         transition: all 0.3s ease-in-out;
@@ -28,6 +28,7 @@
 
     .timeline-btn .glyphicon-chevron-down {
         font-size: 15px;
+        color: #000;
     }
 
     .owl-item {
@@ -38,11 +39,16 @@
     .owl-prev {
         color: #fff;
         font-size: 15px;
-        border: 15px solid rgba(0, 0, 0, .8);
+        border: 8px solid rgba(0, 0, 0, .8);
         background: rgba(0, 0, 0, .8);
-        border-radius: 22px;
+        border-radius: 20px;
         position: absolute;
-        top: 15px;
+        top: 20px;
+    }
+
+    .owl-prev .glyphicon,
+    .owl-next .glyphicon {
+        background: rgba(0, 0, 0, .8);
     }
 
     .owl-next {
