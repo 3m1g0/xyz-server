@@ -1005,9 +1005,8 @@
             } else {
                 center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
             }
-            console.log(center);
             map.flyTo({
-                center: [81.63, 17.28]
+                center: center;
             });
         }
     }

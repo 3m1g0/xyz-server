@@ -40,7 +40,7 @@ app.get('/compare', function(req, res){
 });
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/html/drone.html');
+  res.sendFile(__dirname + '/html/orthomosaic.html');
 });
 
 var routes = require('./api/routes/annotationRoutes');
