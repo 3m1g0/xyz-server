@@ -59,6 +59,100 @@
         left: 0;
     }
 
+    .floating-label {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .floating-input,
+    .floating-select {
+        font-size: 14px;
+        padding: 4px 4px;
+        display: block;
+        width: 100%;
+        height: 30px;
+        margin-left: 30px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #757575;
+    }
+
+    .floating-input:focus,
+    .floating-select:focus {
+        outline: none;
+        border-bottom: 2px solid #5264AE;
+    }
+
+    label {
+        color: #999;
+        font-size: 14px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 20px;
+        margin-left: 20px;
+        top: 5px;
+        transition: 0.2s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    .floating-input:focus~label,
+    .floating-input:not(:placeholder-shown)~label {
+        top: -8px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+
+    .floating-select:focus~label,
+    .floating-select:not([value=""]):valid~label {
+        top: -18px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+    /* active state */
+
+    .floating-input:focus~.bar:before,
+    .floating-input:focus~.bar:after,
+    .floating-select:focus~.bar:before,
+    .floating-select:focus~.bar:after {
+        width: 50%;
+    }
+
+    *,
+    *:before,
+    *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .floating-textarea {
+        min-height: 25px;
+        max-height: 260px;
+        overflow: hidden;
+        overflow-x: hidden;
+    }
+    /* highlighter */
+
+    .highlight {
+        position: absolute;
+        height: 50%;
+        width: 100%;
+        top: 15%;
+        left: 0;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    /* active state */
+
+    .floating-input:focus~.highlight,
+    .floating-select:focus~.highlight {
+        -webkit-animation: inputHighlighter 0.3s ease;
+        -moz-animation: inputHighlighter 0.3s ease;
+        animation: inputHighlighter 0.3s ease;
+    }
+
     #annotationSearchBox {
         background-image: url('../res/search.png');
         /* Add a search icon to input */
@@ -170,7 +264,6 @@
     <script type="text/javascript" src="../js/map-utils.js"></script>
     <script type="text/javascript" src="../js/owl.carousel.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 </head>
 
 <body class="app">
@@ -273,7 +366,6 @@
                                     <form id="orthoRange" class="range-field">
                                         <input type="range" min="0" max="100" value="100" />
                                     </form>
-                                    
                                 </div>
                             </li>
                             <li>
@@ -339,7 +431,6 @@
                   <i class="ti-bell"></i>
                 </a>
                             <ul class="dropdown-menu">
-                                
                             </ul>
                         </li>
                         <li class="notifications dropdown">
@@ -348,7 +439,6 @@
                   <i class="ti-email"></i>
                 </a>
                             <ul class="dropdown-menu">
-                                
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -404,61 +494,61 @@
                                     3rd Jan
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('2')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('2')">
                                 <img src="../res/developerxyz.97ii82hq.png" />
                                 <div>
                                     7th Feb
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('3')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('3')">
                                 <img src="../res/developerxyz.8sv2sr03.png" />
                                 <div>
                                     4th Mar
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('4')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('4')">
                                 <img src="../res/developerxyz.1q6j39re.png" />
                                 <div>
                                     8th Apr
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('5')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('5')">
                                 <img src="../res/developerxyz.9ohz1fb1.png" />
                                 <div>
                                     2nd May
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('6')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('6')">
                                 <img src="../res/developerxyz.ay58n3um.png" />
                                 <div>
                                     9th Jun
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('7')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('7')">
                                 <img src="../res/developerxyz.3wbs9pyc.png" />
                                 <div>
                                     6th Jul
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('8')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('8')">
                                 <img src="../res/developerxyz.14okwdi4.png" />
                                 <div>
                                     4th Aug
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('9')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('9')">
                                 <img src="../res/developerxyz.bm55h55w.png" />
                                 <div>
                                     3rd Sep
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('10')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('10')">
                                 <img src="../res/developerxyz.a5yr0pkg.png" />
                                 <div>
                                     1st Oct
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('11')" >
+                            <div style="background-color: #FFF" onclick="timelineClick('11')">
                                 <img src="../res/developerxyz.7dp1qa5b.png" />
                                 <div>
                                     28th Oct
@@ -484,14 +574,15 @@
                         </div>
                         <!--Body-->
                         <div class="modal-body mb-0">
-                            <div class="md-form form-sm">
+                            <div class="floating-label">
                                 <i class="fa fa-tag prefix"></i>
-                                <input type="text" id="annotationTitleField" class="form-control">
+                                <input class="floating-input" type="text" placeholder=" " id="annotationTitleField" style="height:25px;">
+                                <span class="highlight"></span>
                                 <label for="form27">Title</label>
                             </div>
-                            <div class="md-form form-sm">
+                            <div class="floating-label">
                                 <i class="fa fa-pencil prefix"></i>
-                                <textarea type="text" id="annotationDescField" class="md-textarea mb-0"></textarea>
+                                <textarea type="text" id="annotationDescField" class="floating-input" placeholder=" "></textarea>
                                 <label for="form8">Description</label>
                             </div>
                             <div class="text-center mt-1-half">
@@ -539,93 +630,91 @@
         </div>
     </div>
     <script>
-
-    var layers = [
-          {
+    var layers = [{
             "id": "1",
             "type": "raster",
             "source": "raster-tiles1",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "2",
             "type": "raster",
             "source": "raster-tiles2",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "3",
             "type": "raster",
             "source": "raster-tiles3",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "4",
             "type": "raster",
             "source": "raster-tiles4",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "5",
             "type": "raster",
             "source": "raster-tiles5",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "6",
             "type": "raster",
             "source": "raster-tiles6",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "7",
             "type": "raster",
             "source": "raster-tiles7",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "8",
             "type": "raster",
             "source": "raster-tiles8",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "9",
             "type": "raster",
             "source": "raster-tiles9",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "10",
             "type": "raster",
             "source": "raster-tiles10",
             "minzoom": 0,
             "maxzoom": 22
-          },
-          {
+        },
+        {
             "id": "11",
             "type": "raster",
             "source": "raster-tiles11",
             "minzoom": 0,
             "maxzoom": 22
-          }
-        ];
-    
+        }
+    ];
+
     var opacity = 100;
 
-    var tilesets = ['developerxyz.4bp49zqb','developerxyz.97ii82hq','developerxyz.8sv2sr03','developerxyz.1q6j39re','developerxyz.9ohz1fb1','developerxyz.ay58n3um','developerxyz.3wbs9pyc','developerxyz.14okwdi4','developerxyz.bm55h55w','developerxyz.a5yr0pkg','developerxyz.7dp1qa5b'];
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b'];
 
-    var timelineDates = ['3rd Jan','2nd Feb','4th Mar','9th Apr','7th May','3rd Jun','6th Jul','6th Aug','8th Sep','1st Oct','31st Oct'];
-    
+    var timelineDates = ['3rd Jan', '2nd Feb', '4th Mar', '9th Apr', '7th May', '3rd Jun', '6th Jul', '6th Aug', '8th Sep', '1st Oct', '31st Oct'];
+
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
     var tileset = 'developerxyz.4bp49zqb';
     var map = new mapboxgl.Map({
@@ -887,15 +976,15 @@
 
 
     function timelineClick(tileset) {
-      map.removeLayer(currentLayer);
-      var before = getDrawLaterId();
-      currentLayer = tileset;
-      if(before == undefined) {
-        map.addLayer(layers[tileset - 1]);
-      } else {
-        map.addLayer(layers[tileset - 1], getDrawLaterId());
-      }
-      map.setPaintProperty(currentLayer, 'raster-opacity', opacity);
+        map.removeLayer(currentLayer);
+        var before = getDrawLaterId();
+        currentLayer = tileset;
+        if (before == undefined) {
+            map.addLayer(layers[tileset - 1]);
+        } else {
+            map.addLayer(layers[tileset - 1], getDrawLaterId());
+        }
+        map.setPaintProperty(currentLayer, 'raster-opacity', opacity);
     }
 
     function annotationItemClick(id) {
@@ -957,7 +1046,7 @@
         var str = '';
         var owlCarousel = document.getElementById('timeline-carousel');
         for (var i = 0; i < layers.length; i++) {
-            str += '<div style="background-color: #FFF" onclick="timelineClick('+ (i +1) + ')" ><img src="../res/' + tilesets[i] +'.png" /><div>' + timelineDates[i] + '</div></div>';
+            str += '<div style="background-color: #FFF" onclick="timelineClick(' + (i + 1) + ')" ><img src="../res/' + tilesets[i] + '.png" /><div>' + timelineDates[i] + '</div></div>';
         }
         owlCarousel.innerHTML = str;
     }

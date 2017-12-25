@@ -53,47 +53,55 @@
         left: 0;
     }
 
-    #annotationSearchBox {
-        background-image: url('../res/search.png');
-        /* Add a search icon to input */
-        background-position: 10px 16px;
-        /* Position the search icon */
-        background-repeat: no-repeat;
-        /* Do not repeat the icon image */
-        width: 75%;
-        /* Full-width */
-        font-size: 12px;
-        /* Increase font-size */
-        padding: 6px 20px 6px 40px;
-        /* Add some padding */
+    #timelineBtn {
+        margin-top: 13px;
+    }
+
+    #timeline {
+        /* Remove default list styling */
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    #timeline li a {
         border: 1px solid #ddd;
-        /* Add a grey border */
-        margin-bottom: 12px;
-        /* Add some space below the input */
-    }
-
-    #disqus_thread {
-        position: relative;
-    }
-
-    #disqus_thread li.tab-community {
-        content: "";
-        display: none;
-        height: 55px;
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        background: white;
-    }
-
-    #disqus_thread:after {
-        content: "";
+        /* Add a border to all links */
+        margin-top: -1px;
+        /* Prevent double borders */
+        background-color: #ffffff;
+        /* Grey background color */
+        padding: 12px;
+        /* Add some padding */
+        text-decoration: none;
+        /* Remove default text underline */
+        font-size: 12px;
+        /* Increase the font-size */
+        color: #4A4A4A;
+        /* Add a black text color */
         display: block;
-        height: 55px;
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        background: white;
+        /* Make it into a block element to fill the whole list */
+    }
+
+    #timeline li a.active {
+        border: 1px solid #ddd;
+        /* Add a border to all links */
+        margin-top: -1px;
+        /* Prevent double borders */
+        background-color: #e2e2e2;
+        /* Grey background color */
+        padding: 12px;
+        /* Add some padding */
+        text-decoration: none;
+        /* Remove default text underline */
+        font-size: 12px;
+        /* Increase the font-size */
+        color: black;
+        /* Add a black text color */
+        display: block;
+        /* Make it into a block element to fill the whole list */
     }
 
     .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
@@ -153,13 +161,11 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="../css/owl.carousel.min.css">
     <link href="../css/style.css" rel="stylesheet">
-
     <style type="text/css">
     html {
         font-size: 100%;
     }
     </style>
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.1/mapbox-gl.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
@@ -280,76 +286,32 @@
                         </li>
                     </ul>
                     <ul class="nav-right">
+                        <li class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="timelineBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Compare Orthomosaic
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <ul id="timeline" class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
+                                        <li>
+                                            <a href="compare?tileset=developerxyz.4bp49zqb">3rd Jan</a>
+                                        </li>
+                                        <li>
+                                            <a href="compare?tileset=developerxyz.4bp49zqb">3rd Jan</a>
+                                        </li>
+                                        <li>
+                                            <a href="compare?tileset=developerxyz.4bp49zqb">3rd Jan</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="notifications dropdown">
                             <span class="counter bgc-red">3</span>
                             <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
                   <i class="ti-bell"></i>
                 </a>
                             <ul class="dropdown-menu">
-                                <li class="pX-20 pY-15 bdB">
-                                    <i class="ti-bell pR-10"></i>
-                                    <span class="fsz-sm fw-600 c-grey-900">Notifications</span>
-                                </li>
-                                <li>
-                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                              <span class="fw-500">John Doe</span>
-                                                    <span class="c-grey-600">liked your <span class="text-dark">post</span>
-                                                    </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">5 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                              <span class="fw-500">Moo Doe</span>
-                                                    <span class="c-grey-600">liked your <span class="text-dark">cover image</span>
-                                                    </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">7 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                              <span class="fw-500">Lee Doe</span>
-                                                    <span class="c-grey-600">commented on your <span class="text-dark">video</span>
-                                                    </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">10 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="pX-20 pY-15 ta-c bdT">
-                                    <span>
-                      <a href="" class="c-grey-600 cH-blue fsz-sm td-n">View All Notifications <i class="ti-angle-right fsz-xs mL-10"></i></a>
-                    </span>
-                                </li>
                             </ul>
                         </li>
                         <li class="notifications dropdown">
@@ -358,85 +320,6 @@
                   <i class="ti-email"></i>
                 </a>
                             <ul class="dropdown-menu">
-                                <li class="pX-20 pY-15 bdB">
-                                    <i class="ti-email pR-10"></i>
-                                    <span class="fsz-sm fw-600 c-grey-900">Emails</span>
-                                </li>
-                                <li>
-                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">John Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">5 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                Want to create your own customized data generator for your app...
-                              </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">Moo Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">15 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                Want to create your own customized data generator for your app...
-                              </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">Lee Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">25 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                Want to create your own customized data generator for your app...
-                              </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="pX-20 pY-15 ta-c bdT">
-                                    <span>
-                      <a href="" class="c-grey-600 cH-blue fsz-sm td-n">View All Email <i class="fs-xs ti-angle-right mL-10"></i></a>
-                    </span>
-                                </li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -445,31 +328,31 @@
                                     <img class="w-2r bdrs-50p" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">
                                 </div>
                                 <div class="peer">
-                                    <span class="fsz-sm c-grey-900">John Doe</span>
+                                    <span class="fsz-sm c-grey-900">Chaitanya</span>
                                 </div>
                             </a>
                             <ul class="dropdown-menu fsz-sm">
                                 <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-settings mR-10"></i>
                       <span>Setting</span>
                     </a>
                                 </li>
                                 <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-user mR-10"></i>
                       <span>Profile</span>
                     </a>
                                 </li>
                                 <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-email mR-10"></i>
                       <span>Messages</span>
                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                       <i class="ti-power-off mR-10"></i>
                       <span>Logout</span>
                     </a>
@@ -494,65 +377,93 @@
         </div>
     </div>
     <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b'];
 
-        var beforeTileset = 'developerxyz.ay58n3um';
-        var afterTileset = 'developerxyz.1q6j39re';
+    var timelineDates = ['3rd Jan', '2nd Feb', '4th Mar', '9th Apr', '7th May', '3rd Jun', '6th Jul', '6th Aug', '8th Sep', '1st Oct', '31st Oct'];
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
 
-        var beforeMap = new mapboxgl.Map({
-          container: 'before',
-          style: {
+    var beforeTileset = getParameterByName('tileset');
+    console.log(beforeTileset);
+    if (beforeTileset == undefined) {
+        beforeTileset = 'developerxyz.a5yr0pkg';
+    }
+    console.log(beforeTileset);
+    var afterTileset = 'developerxyz.7dp1qa5b';
+
+    var beforeMap = new mapboxgl.Map({
+        container: 'before',
+        style: {
             version: 8,
             sources: {
-              'raster-tiles': {
-                type: 'raster',
-                url: 'mapbox://' + beforeTileset,
-                tileSize: 256
-              }
+                'raster-tiles': {
+                    type: 'raster',
+                    url: 'mapbox://' + beforeTileset,
+                    tileSize: 256
+                }
             },
             layers: [{
-              id: 'simple-tiles',
-              type: 'raster',
-              source: 'raster-tiles',
-              minzoom: 0,
-              maxzoom: 22
+                id: 'simple-tiles',
+                type: 'raster',
+                source: 'raster-tiles',
+                minzoom: 0,
+                maxzoom: 22
             }]
-          },
-          center: [6.565,46.523],
-          zoom: 17
-        });
+        },
+        center: [6.565, 46.523],
+        zoom: 17
+    });
 
-        var afterMap = new mapboxgl.Map({
-          container: 'after',
-          style: {
+    var afterMap = new mapboxgl.Map({
+        container: 'after',
+        style: {
             version: 8,
             sources: {
-              'raster-tiles': {
-                type: 'raster',
-                url: 'mapbox://' + afterTileset,
-                tileSize: 256
-              }
+                'raster-tiles': {
+                    type: 'raster',
+                    url: 'mapbox://' + afterTileset,
+                    tileSize: 256
+                }
             },
             layers: [{
-              id: 'simple-tiles',
-              type: 'raster',
-              source: 'raster-tiles',
-              minzoom: 0,
-              maxzoom: 22
+                id: 'simple-tiles',
+                type: 'raster',
+                source: 'raster-tiles',
+                minzoom: 0,
+                maxzoom: 22
             }]
-          },
-          center: [6.565,46.523],
-          zoom: 17
-        });
+        },
+        center: [6.565, 46.523],
+        zoom: 17
+    });
 
-        var map = new mapboxgl.Compare(beforeMap, afterMap, {});
+    var map = new mapboxgl.Compare(beforeMap, afterMap, {});
 
-        // setInterval(function(){ 
-        //     var source = afterMap.getSource('raster-tiles')
-        //     source.url = ('mapbox://' + beforeTileset);
-        //     afterMap.styles.sources['raster-tiles'].reload();
-        // }, 3000);
+    populateTimeline();
 
+    // setInterval(function(){ 
+    //     var source = afterMap.getSource('raster-tiles')
+    //     source.url = ('mapbox://' + beforeTileset);
+    //     afterMap.styles.sources['raster-tiles'].reload();
+    // }, 3000);
+
+    function populateTimeline() {
+        var str = '';
+        var timeline = document.getElementById('timeline');
+        for (var i = 0; i < tilesets.length; i++) {
+            str += '<li><a class="sidebar-link" href="compare?tileset=' + tilesets[i] + '">' + timelineDates[i] + '</a></li>';
+        }
+        timeline.innerHTML = str;
+    }
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
     </script>
     <script type="text/javascript " src="../js/vendor.js "></script>
     <script type="text/javascript " src="../js/bundle.js "></script>
