@@ -198,8 +198,9 @@
     </style>
 
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
-    <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script>
+    <!-- <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script> -->
     <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script>
+    <script type="text/javascript" src='../js/mapbox-gl.js'></script>
     <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
     <script type="text/javascript" src="../js/map-utils.js"></script>
     <script type="text/javascript" src="../js/pannellum.js"></script>
@@ -835,9 +836,7 @@
             $('#annoListItem' + myId).addClass("active");
             draw.changeMode('simple_select', {'featureIds' : [getLocalIdForFeatureId(myId)]});
             map.flyTo({
-                center: [
-                    -74.50 + (Math.random() - 0.5) * 10,
-                    40 + (Math.random() - 0.5) * 10]
+                center: [81.63, 17.28]
             });
         }
 
@@ -913,6 +912,7 @@
     </script>
     <script>
         $('.events ol>li>a').on('click', function(e) {
+            console.log($(this).text());
             map.removeLayer(layers[currIndex].id);
             currIndex = (currIndex + 1 ) % 4;
             map.addLayer(layers[currIndex], getDrawLaterId());

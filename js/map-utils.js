@@ -80,6 +80,14 @@ function getLocalIdForFeatureId(id) {
     }
 }
 
+function getFeatureForFeatureId(id) {
+    for(var i = 0; i < geoJSON.features.length; i++) {
+        if(geoJSON.features[i]._id === id) {
+            return geoJSON.features[i];
+        }
+    }
+}
+
 function changeCoordinatesForPoint(feature) {
     if(feature.geometry.type === 'Point') {
         var coordinatesArray = feature.geometry.coordinates;

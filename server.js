@@ -1,6 +1,6 @@
 var express = require('express'),
   cors = require('cors'),
-  port = process.env.PORT || 3000,
+  port = process.env.PORT || 8080,
   http = require('http').Server(app),
   bodyParser = require('body-parser'),
   mongoose = require('mongoose'),
@@ -29,6 +29,10 @@ app.get('/home', function(req, res){
 
 app.get('/home-test', function(req, res){
   res.sendFile(__dirname + '/html/home-test.html');
+});
+
+app.get('/orthomosaic', function(req, res){
+  res.sendFile(__dirname + '/html/orthomosaic.html');
 });
 
 app.get('/compare', function(req, res){

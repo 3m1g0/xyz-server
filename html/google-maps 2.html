@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Maps</title>
+    <style>
+    #loader {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        visibility: visible;
+        position: fixed;
+        height: 100vh;
+        width: 100%;
+        background: #fff;
+        z-index: 90000;
+    }
+
+    #loader.fadeOut {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .timeline-btn {
+        border-radius: 0 0 10px 10px;
+        outline: 0!important;
+        padding: 1px 17px!important;
+    }
+
+    .timeline-btn .glyphicon-chevron-down {
+        font-size: 15px;
+    }
+
+    .owl-item {
+        padding: 10px;
+    }
+
+    .owl-next,
+    .owl-prev {
+        color: #fff;
+        font-size: 15px;
+        border: 15px solid rgba(0, 0, 0, .8);
+        background: rgba(0, 0, 0, .8);
+        border-radius: 22px;
+        position: absolute;
+        top: 50px;
+    }
+
+    .owl-next {
+        right: 0;
+    }
+
+    .owl-prev {
+        left: 0;
+    }
+
+    #annotationSearchBox {
+        background-image: url('../res/search.png');
+        /* Add a search icon to input */
+        background-position: 10px 16px;
+        /* Position the search icon */
+        background-repeat: no-repeat;
+        /* Do not repeat the icon image */
+        width: 75%;
+        /* Full-width */
+        font-size: 12px;
+        /* Increase font-size */
+        padding: 6px 20px 6px 40px;
+        /* Add some padding */
+        border: 1px solid #ddd;
+        /* Add a grey border */
+        margin-bottom: 12px;
+        /* Add some space below the input */
+    }
+
+    #disqus_thread {
+        position: relative;
+    }
+
+    #disqus_thread li.tab-community {
+        content: "";
+        display: none;
+        height: 55px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background: white;
+    }
+
+    #disqus_thread:after {
+        content: "";
+        display: block;
+        height: 55px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background: white;
+    }
+
+    .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
+        display: inherit;
+    }
+
+    .mapboxgl-ctrl-bottom-left {
+        width: 100%;
+        justify-content: center;
+        display: inline-flex;
+    }
+
+    a.mapboxgl-ctrl-logo {
+        display: none !important;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: calc(50% - 20px);
+        left: calc(50% - 20px);
+        background-color: #333;
+        border-radius: 100%;
+        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+        animation: sk-scaleout 1.0s infinite ease-in-out;
+    }
+
+    @-webkit-keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0)
+        }
+        100% {
+            -webkit-transform: scale(1.0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+        100% {
+            -webkit-transform: scale(1.0);
+            transform: scale(1.0);
+            opacity: 0;
+        }
+    }
+    </style>
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Fira+Sans:400,400italic' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="../css/owl.carousel.min.css">
+    <link href="../css/style.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" media="all" href="//fast.cometondemand.net/50218x_xf88ed.css" />
+    <link href="https://mdbootstrap.com/live/_MDB/css/compiled.min.css" rel="stylesheet">
+    <style type="text/css">
+    html {
+        font-size: 100%;
+    }
+    </style>
+    <script src="../js/jquery-2.1.4.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
+    <script type="text/javascript" src="../js/map-utils.js"></script>
+    <script type="text/javascript" src="../js/owl.carousel.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body class="app">
+    <!-- @TOC -->
+    <!-- =================================================== -->
+    <!--
+      + @Page Loader
+      + @App Content
+          - #Left Sidebar
+              > $Sidebar Header
+              > $Sidebar Menu
+
+          - #Main
+              > $Topbar
+              > $App Screen Content
+    -->
+    <!-- @Page Loader -->
+    <!-- =================================================== -->
+    <div id='loader'>
+        <div class="spinner"></div>
+    </div>
+    <script type="text/javascript">
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('loader');
+        setTimeout(() => {
+            loader.classList.add('fadeOut');
+        }, 300);
+    });
+    </script>
+    <!-- @App Content -->
+    <!-- =================================================== -->
+    <div>
+        <!-- #Left Sidebar ==================== -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <!-- ### $Sidebar Header ### -->
+                <div class="sidebar-logo">
+                    <div class="peers ai-c fxw-nw">
+                        <div class="peer peer-greed">
+                            <a class='sidebar-link td-n' href="/" class="td-n">
+                                <div class="peers ai-c fxw-nw">
+                                    <div class="peer">
+                                        <div class="logo">
+                                            <img src="../res/logo.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="peer peer-greed">
+                                        <h5 class="lh-1 mB-0 logo-text">Adminator</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="peer">
+                            <div class="mobile-toggle sidebar-toggle">
+                                <a href="" class="td-n">
+                    <i class="ti-arrow-circle-left"></i>
+                  </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ### $Sidebar Menu ### -->
+                <ul class="sidebar-menu scrollable pos-r">
+                    <li class="nav-item mT-30 active">
+                        <a class='sidebar-link' href="/" default>
+                <span class="icon-holder">
+                  <i class="c-blue-500 ti-home"></i>
+                </span>
+                <span class="title">Dashboard</span>
+              </a>
+                    </li>
+                    <!-- <li class="nav-item">
+              <a class='sidebar-link' href="email.html">
+                <span class="icon-holder">
+                  <i class="c-brown-500 ti-email"></i>
+                </span>
+                <span class="title">Email</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class='sidebar-link' href="compose.html">
+                <span class="icon-holder">
+                  <i class="c-blue-500 ti-share"></i>
+                </span>
+                <span class="title">Compose</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class='sidebar-link' href="calendar.html">
+                <span class="icon-holder">
+                  <i class="c-deep-orange-500 ti-calendar"></i>
+                </span>
+                <span class="title">Calendar</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class='sidebar-link' href="chat.html">
+                <span class="icon-holder">
+                  <i class="c-deep-purple-500 ti-comment-alt"></i>
+                </span>
+                <span class="title">Chat</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class='sidebar-link' href="charts.html">
+                <span class="icon-holder">
+                  <i class="c-indigo-500 ti-bar-chart"></i>
+                </span>
+                <span class="title">Charts</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class='sidebar-link' href="forms.html">
+                <span class="icon-holder">
+                  <i class="c-light-blue-500 ti-pencil"></i>
+                </span>
+                <span class="title">Forms</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="sidebar-link" href="ui.html">
+                <span class="icon-holder">
+                    <i class="c-pink-500 ti-palette"></i>
+                  </span>
+                <span class="title">UI Elements</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                  <i class="c-orange-500 ti-layout-list-thumb"></i>
+                </span>
+                <span class="title">Tables</span>
+                <span class="arrow">
+                  <i class="ti-angle-right"></i>
+                </span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class='sidebar-link' href="basic-table.html">Basic Table</a>
+                </li>
+                <li>
+                  <a class='sidebar-link' href="datatable.html">Data Table</a>
+                </li>
+              </ul>
+            </li> -->
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-purple-500 ti-map"></i>
+                  </span>
+                <span class="title">Maps</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="google-maps.html">Orthomosaic</a>
+                            </li>
+                            <li>
+                                <a href="vector-maps.html">3D</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-red-500 ti-files"></i>
+                  </span>
+                <span class="title">Annotations</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu" id="annotationList">
+                            <!-- <li>
+                                <a class='sidebar-link' href="404.html">Annotation 1</a>
+                            </li>
+                            <li>
+                                <a class='sidebar-link' href="500.html">Annotation 2</a>
+                            </li>
+                            <li>
+                                <a class='sidebar-link' href="signin.html">Annotation 3</a>
+                            </li>
+                            <li>
+                                <a class='sidebar-link' href="signup.html">Annotation 4</a>
+                            </li> -->
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class='sidebar-link' href="email.html">
+                <span class="icon-holder">
+                  <i class="c-indigo-500 ti-bar-chart"></i>
+                </span>
+                <span class="title">Compare</span>
+              </a>
+                    </li>
+                    <!-- <li class="nav-item dropdown">
+              <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                  <i class="c-teal-500 ti-view-list-alt"></i>
+                </span>
+                <span class="title">Multiple Levels</span>
+                <span class="arrow">
+                  <i class="ti-angle-right"></i>
+                </span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="nav-item dropdown">
+                  <a href="javascript:void(0);">
+                    <span>Menu Item</span>
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a href="javascript:void(0);">
+                    <span>Menu Item</span>
+                    <span class="arrow">
+                      <i class="ti-angle-right"></i>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="javascript:void(0);">Menu Item</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0);">Menu Item</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li> -->
+                </ul>
+            </div>
+        </div>
+        <!-- #Main ============================ -->
+        <div class="page-container">
+            <!-- ### $Topbar ### -->
+            <div class="header navbar">
+                <div class="header-container">
+                    <ul class="nav-left">
+                        <li>
+                            <a id='sidebar-toggle' class="sidebar-toggle" href="javascript:void(0);">
+                  <i class="ti-menu"></i>
+                </a>
+                        </li>
+                        <li class="search-box">
+                            <a class="search-toggle no-pdd-right" href="javascript:void(0);">
+                  <i class="search-icon ti-search pdd-right-10"></i>
+                  <i class="search-icon-close ti-close pdd-right-10"></i>
+                </a>
+                        </li>
+                        <li class="search-input">
+                            <input class="form-control" type="text" placeholder="Search...">
+                        </li>
+                    </ul>
+                    <ul class="nav-right">
+                        <li class="notifications dropdown">
+                            <span class="counter bgc-red">3</span>
+                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
+                  <i class="ti-bell"></i>
+                </a>
+                            <ul class="dropdown-menu">
+                                <li class="pX-20 pY-15 bdB">
+                                    <i class="ti-bell pR-10"></i>
+                                    <span class="fsz-sm fw-600 c-grey-900">Notifications</span>
+                                </li>
+                                <li>
+                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <span>
+                              <span class="fw-500">John Doe</span>
+                                                    <span class="c-grey-600">liked your <span class="text-dark">post</span>
+                                                    </span>
+                                                    </span>
+                                                    <p class="m-0">
+                                                        <small class="fsz-xs">5 mins ago</small>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <span>
+                              <span class="fw-500">Moo Doe</span>
+                                                    <span class="c-grey-600">liked your <span class="text-dark">cover image</span>
+                                                    </span>
+                                                    </span>
+                                                    <p class="m-0">
+                                                        <small class="fsz-xs">7 mins ago</small>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <span>
+                              <span class="fw-500">Lee Doe</span>
+                                                    <span class="c-grey-600">commented on your <span class="text-dark">video</span>
+                                                    </span>
+                                                    </span>
+                                                    <p class="m-0">
+                                                        <small class="fsz-xs">10 mins ago</small>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="pX-20 pY-15 ta-c bdT">
+                                    <span>
+                      <a href="" class="c-grey-600 cH-blue fsz-sm td-n">View All Notifications <i class="ti-angle-right fsz-xs mL-10"></i></a>
+                    </span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="notifications dropdown">
+                            <span class="counter bgc-blue">3</span>
+                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
+                  <i class="ti-email"></i>
+                </a>
+                            <ul class="dropdown-menu">
+                                <li class="pX-20 pY-15 bdB">
+                                    <i class="ti-email pR-10"></i>
+                                    <span class="fsz-sm fw-600 c-grey-900">Emails</span>
+                                </li>
+                                <li>
+                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <div>
+                                                        <div class="peers jc-sb fxw-nw mB-5">
+                                                            <div class="peer">
+                                                                <p class="fw-500 mB-0">John Doe</p>
+                                                            </div>
+                                                            <div class="peer">
+                                                                <small class="fsz-xs">5 mins ago</small>
+                                                            </div>
+                                                        </div>
+                                                        <span class="c-grey-600 fsz-sm">
+                                Want to create your own customized data generator for your app...
+                              </span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <div>
+                                                        <div class="peers jc-sb fxw-nw mB-5">
+                                                            <div class="peer">
+                                                                <p class="fw-500 mB-0">Moo Doe</p>
+                                                            </div>
+                                                            <div class="peer">
+                                                                <small class="fsz-xs">15 mins ago</small>
+                                                            </div>
+                                                        </div>
+                                                        <span class="c-grey-600 fsz-sm">
+                                Want to create your own customized data generator for your app...
+                              </span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
+                                                <div class="peer mR-15">
+                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
+                                                </div>
+                                                <div class="peer peer-greed">
+                                                    <div>
+                                                        <div class="peers jc-sb fxw-nw mB-5">
+                                                            <div class="peer">
+                                                                <p class="fw-500 mB-0">Lee Doe</p>
+                                                            </div>
+                                                            <div class="peer">
+                                                                <small class="fsz-xs">25 mins ago</small>
+                                                            </div>
+                                                        </div>
+                                                        <span class="c-grey-600 fsz-sm">
+                                Want to create your own customized data generator for your app...
+                              </span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="pX-20 pY-15 ta-c bdT">
+                                    <span>
+                      <a href="" class="c-grey-600 cH-blue fsz-sm td-n">View All Email <i class="fs-xs ti-angle-right mL-10"></i></a>
+                    </span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
+                                <div class="peer mR-10">
+                                    <img class="w-2r bdrs-50p" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">
+                                </div>
+                                <div class="peer">
+                                    <span class="fsz-sm c-grey-900">John Doe</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu fsz-sm">
+                                <li>
+                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-settings mR-10"></i>
+                      <span>Setting</span>
+                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-user mR-10"></i>
+                      <span>Profile</span>
+                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-email mR-10"></i>
+                      <span>Messages</span>
+                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-power-off mR-10"></i>
+                      <span>Logout</span>
+                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ### $App Screen Content ### -->
+            <main class='bgc-grey-100'>
+                <div id='map' style="height: calc(100% - 70px); width: calc(100% - 70px);; position: absolute !important; margin-top: 65px;">
+                </div>
+                <div class="container-fluid p-0" style="height: 180px; width: calc(100% - 70px); position: absolute !important; margin-top: 63px; text-align: center;">
+                    <div id="demo" class="collapse" style="background-color: rgba(62, 60, 60, 0.9); padding:10px">
+                        <div class="owl-carousel">
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram1')" ">
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram2')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram3')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram4')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram1')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram2')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram3')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram4')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram1')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram2')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram3')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram4')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram1')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram2')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram3')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('polavaram4')" >
+                                <img src="../res/thumbnail.png" />
+                                <div>
+                                    28 Feb
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn timeline-btn" data-toggle="collapse" data-target="#demo">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                </div>
+            </main>
+            <div class="modal fade" id="modalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal" role="document">
+                    <!--Content-->
+                    <div class="modal-content">
+                        <!--Header-->
+                        <div class="modal-header light-blue darken-3 white-text">
+                            <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="title"><i class="fa fa-newspaper-o"></i> New annotation</h4>
+                        </div>
+                        <!--Body-->
+                        <div class="modal-body mb-0">
+                            <div class="md-form form-sm">
+                                <i class="fa fa-tag prefix"></i>
+                                <input type="text" id="annotationTitleField" class="form-control">
+                                <label for="form27">Title</label>
+                            </div>
+                            <div class="md-form form-sm">
+                                <i class="fa fa-pencil prefix"></i>
+                                <textarea type="text" id="annotationDescField" class="md-textarea mb-0"></textarea>
+                                <label for="form8">Description</label>
+                            </div>
+                            <div class="text-center mt-1-half">
+                                <button id="newAnnoSubmit" class="btn btn-info mb-1">Submit <i class="fa fa-check ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.Content-->
+                </div>
+            </div>
+            <!--Modal: Subscription From-->
+            <!-- Modal Message-->
+            <div class="modal fade right" id="basicExample" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-full-height modal-right" role="document">
+                    <!--Content-->
+                    <div class="modal-content">
+                        <!--Body-->
+                        <div class="modal-body">
+                            <div id="disqus_thread" style="background-color: '#fff'"></div>
+                        </div>
+                    </div>
+                    <!--/.Content-->
+                </div>
+            </div>
+            <!-- Modal Message-->
+            <div class="modal fade right" id="panoramaModal" role="dialog">
+                <div class="modal-dialog modal-full-height modal-lg modal-right" role="document">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="heading lead">Panorama View</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="panorama"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Message-->
+            <!-- ### $App Screen Footer ### -->
+            <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
+                <!-- <span>Copyright © 2017 Designed by <a href="https://colorlib.com" target='_blank' title="Colorlib">Colorlib</a>. All rights reserved.</span> -->
+            </footer>
+        </div>
+    </div>
+    <script>
+    var owl = $('.owl-carousel');
+    owl.owlCarousel({
+        loop: false,
+        nav: true,
+        margin: 10,
+        responsive: {
+            0: {
+                items: 2
+            },
+            600: {
+                items: 4
+            },
+            960: {
+                items: 6
+            },
+            1200: {
+                items: 8
+            }
+        }
+    });
+    owl.on('mousewheel', '.owl-stage', function(e) {
+        if (e.deltaY > 0) {
+            owl.trigger('next.owl');
+        } else {
+            owl.trigger('prev.owl');
+        }
+        e.preventDefault();
+    });
+    $('.owl-prev')[0].innerHTML = "<span class='glyphicon glyphicon-chevron-left'></span>"
+    $('.owl-next')[0].innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>"
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
+    var tileset = 'developerxyz.4bp49zqb';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: {
+            "version": 8,
+            "sources": {
+                "satellite-tiles": {
+                    "type": "raster",
+                    "url": "mapbox://" + "mapbox.satellite",
+                    "tileSize": 256
+                },
+                "raster-tiles1": {
+                    "type": "raster",
+                    "url": "mapbox://" + tileset,
+                    "tileSize": 256
+                },
+                "raster-tiles2": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.ay58n3um",
+                    "tileSize": 256
+                },
+                "raster-tiles3": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.1q6j39re",
+                    "tileSize": 256
+                },
+                "raster-tiles4": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.9ohz1fb1",
+                    "tileSize": 256
+                }
+            },
+            "layers": [{
+                "id": "satellite",
+                "type": "raster",
+                "source": "satellite-tiles",
+                "minzoom": 0,
+                "maxzoom": 22
+            }]
+        },
+        center: [6.565, 46.523], // starting position
+        zoom: 16 // starting zoom
+    });
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl(), "bottom-left");
+
+    var draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+            polygon: true,
+            point: true,
+            trash: true
+        }
+    });
+    map.addControl(draw, "bottom-left");
+
+    var featureIds;
+    var geoJSON;
+    var currentFeature;
+    var isSubmitClicked = false;
+    var currentLayer;
+    map.on('draw.create', function(e) {
+        currentFeature = e.features[0];
+        // jQuery.noConflict(); 
+        $('#modalSubscription').modal('show');
+    });
+
+    map.on('draw.update', function(e) {
+        if (e.features.length > 0) {
+            updateFeatures(e.features[0]);
+            populateAnnotationsList(geoJSON.features);
+        }
+    });
+
+    map.on('draw.delete', function(e) {
+        console.log(e.features);
+        if (e.features.length > 0) {
+            deleteFeatures(e.features[0]);
+        }
+    });
+
+    map.on('draw.selectionchange', function(e) {
+        if (e.features.length > 0) {
+            var feature = getFeatureForId(e.features[0].id);
+            console.log(feature);
+            if (feature) {
+                $("#basicExample").modal('show');
+                $('#selectedAnno #noAnno').hide();
+                $('#selectedAnno h4').text(feature.properties.title);
+                $('#annoDesc').text('description : ' + feature.properties.description);
+                $('.annoCard').show();
+                if (feature.geometry.type == 'Polygon') {
+
+                    $('#annoLocation').text();
+                    $('#annoLocation').hide();
+                    $('#area').text("Area : " + getAreaForFeature(feature));
+                    $('#area').show();
+                }
+                if (feature.geometry.type == 'Point') {
+                    $(' #area').text();
+                    $(' #area').hide();
+                    $('#selectedAnno #annoLocation').text("Loctaion : " + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3));
+                    $('#annoLocation').show();
+                }
+                console.log(feature);
+                // $('#annotationList li span').removeClass("active");
+                // $('#annoListItem' + feature._id).addClass("active");
+            }
+        } else {
+            // $('#annotationList li span').removeClass("active");
+        }
+    });
+
+    var layers;
+    var currIndex = 0;
+    var index = 1;
+
+    map.on('load', function(e) {
+        map.loadImage('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678135-sticky-note-128.png', function(error, image) {
+            if (error) throw error;
+            map.addImage('cat', image);
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/annotations',
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data) {
+                    geoJSON = data;
+                    changeCoordinatesForPoints();
+                    console.log("Data fetched!");
+                    featureIds = draw.add(data);
+                    populateAnnotationsList(geoJSON.features);
+                }
+            });
+            $.ajax({
+                type: 'GET',
+                url: 'http://www.mocky.io/v2/5a36666d2f00006009127aab',
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data) {
+                    layers = data;
+                    var before = getDrawLaterId();
+                    currentLayer = data[0].id;
+                    if (before == undefined) {
+                        map.addLayer(data[0]);
+                    } else {
+                        map.addLayer(data[0], getDrawLaterId());
+                    }
+
+                }
+            });
+        });
+    });
+
+    $('#basicExample').on('show.bs.modal', function(e) {
+        var annotationId = $(e.relatedTarget).data('id');
+        reset(annotationId, annotationId);
+    });
+
+    $('#panoramaModal').on('show.bs.modal', function(e) {
+        var panoId = $(e.relatedTarget).data('id');
+        pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": "../panoramas/pano" + panoId + ".jpg"
+        });
+    });
+
+    $('#modalSubscription').on('show.bs.modal', function(e1) {
+        $(this).find("text,input,textarea,select").val('').end();
+    });
+    $('#modalSubscription').on('hidden.bs.modal', function(e1) {
+        if (isSubmitClicked && $('#annotationTitleField').val() != '') {
+            if (currentFeature != undefined) {
+                featureIds.push(currentFeature.id);
+                currentFeature.properties.title = $('#annotationTitleField').val();
+                currentFeature.properties.description = $('#annotationDescField').val();
+                uploadFeatures(currentFeature);
+            }
+        } else {
+            draw.delete([currentFeature.id]);
+        }
+    })
+    $('#newAnnoSubmit').on('click', function() {
+        if ($('#annotationTitleField').val() != '') {
+            // jQuery.noConflict();
+            $("#modalSubscription").modal('hide');
+            isSubmitClicked = true;
+        }
+    });
+
+    function timelineClick(tileset) {
+      var index = tileset.replace('polavaram', '');
+      console.log();
+      map.removeLayer(currentLayer);
+      var before = getDrawLaterId();
+      currentLayer = tileset;
+      map.addLayer(layers[index - 1], getDrawLaterId());
+    }
+
+    function annotationItemClick(id) {
+        var myId = id.replace('annoListItem', '');
+        $('#annotationList li a').removeClass("active");
+        $('#annoListItem' + myId).addClass("active");
+        draw.changeMode('simple_select', { 'featureIds': [getLocalIdForFeatureId(myId)] });
+        var feature = getFeatureForFeatureId(myId);
+        if (feature != undefined) {
+            var center;
+            if (feature.geometry.type == 'Polygon') {
+                center = [feature.geometry.coordinates[0][0][0], feature.geometry.coordinates[0][0][1]];
+            } else {
+                center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
+            }
+            console.log(center);
+            map.flyTo({
+                center: [81.63, 17.28]
+            });
+        }
+    }
+
+    function populateAnnotationsList(features) {
+        var listEl = document.getElementById('annotationList');
+
+        var populateList = function(arr) {
+            var str = '<li><input type="text" id="annotationSearchBox" onkeyup="filterAnnotationsList()" placeholder="Search for annotations.." onkeypress="annoSearch(event)"></li>';
+            var panId = 0;
+            for (var i = 0; i < arr.length; i++) {
+                panId = i % 3;
+                str += '<li><a class="sidebar-link" id="annoListItem' + (arr[i]._id) + '" onClick="annotationItemClick(this.id)"><span data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id + '"class="fa fa-commenting-o">&nbsp;</span>' + arr[i].properties.title + '</a></li>';
+            }
+            return str;
+        }
+
+        listEl.innerHTML = populateList(features);
+    }
+
+    function filterAnnotationsList() {
+        var input, filter, ul, li, span, i;
+        input = document.getElementById("annotationSearchBox");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("annotationList");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a != undefined) {
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+
+                }
+            }
+        }
+    }
+
+    var disqus_config = function() {
+        this.page.url = window.location.href + "/polavaram";
+        this.page.identifier = "12345678";
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = 'https://xyzinnovations.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+    var reset = function(newIdentifier, newUrl, newTitle, newLanguage) {
+        DISQUS.reset({
+            reload: true,
+            config: function() {
+                this.page.identifier = newIdentifier;
+                this.page.url = window.location.href + "/" + newUrl;
+            }
+        });
+    };
+
+    var getDrawLaterId = function() {
+        var mapLayers = map.getStyle().layers;
+        // Find the index of the first symbol layer in the map style
+        var firstSymbolId;
+        for (var i = 0; i < mapLayers.length; i++) {
+            if (mapLayers[i].id.startsWith('gl-draw-')) {
+                firstSymbolId = mapLayers[i].id;
+                break;
+            }
+        }
+        return firstSymbolId;
+    }
+    </script>
+    <script type="text/javascript" src="../js/vendor.js"></script>
+    <script type="text/javascript" src="../js/bundle.js"></script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
+</body>
+
+</html>
