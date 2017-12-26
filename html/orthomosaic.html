@@ -222,6 +222,10 @@
         animation: sk-scaleout 1.0s infinite ease-in-out;
     }
 
+    .modal .modal-full-height {
+        height: auto !important;
+    }
+
     @-webkit-keyframes sk-scaleout {
         0% {
             -webkit-transform: scale(0)
@@ -252,6 +256,7 @@
     <link rel="stylesheet" href="../css/owl.carousel.min.css">
     <link href="../css/style.css" rel="stylesheet">
     <link href="https://mdbootstrap.com/live/_MDB/css/compiled.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" media="all" href="//fast.cometondemand.net/50218x_xf88ed.css" />
     <style type="text/css">
     html {
         font-size: 100%;
@@ -264,6 +269,7 @@
     <script type="text/javascript" src="../js/map-utils.js"></script>
     <script type="text/javascript" src="../js/owl.carousel.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script>
 </head>
 
 <body class="app">
@@ -808,6 +814,12 @@
     });
     map.addControl(draw, "bottom-left");
 
+    var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: true,
+        offset: 25
+    });
+
     var featureIds;
     var geoJSON;
     var currentFeature;
@@ -838,30 +850,23 @@
             var feature = getFeatureForId(e.features[0].id);
             console.log(feature);
             if (feature) {
-                $("#basicExample").modal('show');
-                $('#selectedAnno #noAnno').hide();
-                $('#selectedAnno h4').text(feature.properties.title);
-                $('#annoDesc').text('description : ' + feature.properties.description);
-                $('.annoCard').show();
+                // $("#basicExample").modal('show');
+                popup.remove();
                 if (feature.geometry.type == 'Polygon') {
-
-                    $('#annoLocation').text();
-                    $('#annoLocation').hide();
-                    $('#area').text("Area : " + getAreaForFeature(feature));
-                    $('#area').show();
-                }
-                if (feature.geometry.type == 'Point') {
-                    $(' #area').text();
-                    $(' #area').hide();
-                    $('#selectedAnno #annoLocation').text("Loctaion : " + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3));
-                    $('#annoLocation').show();
+                    popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + '</p>')
+                        .addTo(map);
+                } else if (feature.geometry.type == 'Point') {
+                    popup.setLngLat(feature.geometry.coordinates)
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Loctaion : ' + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3) + '</p>')
+                        .addTo(map);
                 }
                 console.log(feature);
-                // $('#annotationList li span').removeClass("active");
-                // $('#annoListItem' + feature._id).addClass("active");
+                $('#annotationList li a').removeClass("active");
+                $('#annoListItem' + feature._id).addClass("active");
             }
         } else {
-            // $('#annotationList li span').removeClass("active");
+            $('#annotationList li a').removeClass("active");
         }
     });
 
@@ -957,7 +962,6 @@
 
     $('#newAnnoSubmit').on('click', function() {
         if ($('#annotationTitleField').val() != '') {
-            // jQuery.noConflict();
             $("#modalSubscription").modal('hide');
             isSubmitClicked = true;
         }
@@ -1000,6 +1004,7 @@
             } else {
                 center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
             }
+            console.log(center);
             map.flyTo({
                 center: center,
                 zoom: 16
@@ -1036,7 +1041,6 @@
                     li[i].style.display = "";
                 } else {
                     li[i].style.display = "none";
-
                 }
             }
         }
@@ -1051,26 +1055,30 @@
         owlCarousel.innerHTML = str;
     }
 
-    var disqus_config = function() {
-        this.page.url = window.location.href + "/polavaram";
-        this.page.identifier = "12345678";
+    // var disqus_config = function() {
+    //     this.page.url = window.location.href + "/polavaram";
+    //     this.page.identifier = "12345678";
+    // };
+    
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'xyzinnovations';
+    var disqus_identifier = 'xyzinnovations';
+    var disqus_config = function () { 
+      this.language = "en";
     };
-    (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document,
-            s = d.createElement('script');
-
-        s.src = 'https://xyzinnovations.disqus.com/embed.js';
-
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-
-    var reset = function(newIdentifier, newUrl, newTitle, newLanguage) {
+    /* * * Disqus Reset Function * * */
+    var reset = function (newIdentifier, newUrl) {
         DISQUS.reset({
             reload: true,
-            config: function() {
+            config: function () {
                 this.page.identifier = newIdentifier;
-                this.page.url = window.location.href + "/" + newUrl;
+                this.page.url = newUrl;
             }
         });
     };
@@ -1087,10 +1095,13 @@
         }
         return firstSymbolId;
     }
+
     </script>
     <script type="text/javascript" src="../js/vendor.js"></script>
     <script type="text/javascript" src="../js/bundle.js"></script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+    <!-- Place the following code before your site's closing </body> tag -->
     <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
 </body>
 

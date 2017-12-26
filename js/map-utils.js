@@ -51,7 +51,7 @@ function deleteFeatures(feature) {
 
 function getIdForFeature(feature) {
     var index = featureIds.indexOf(feature.id);
-    if(index >= 0) {
+    if (index >= 0) {
         return geoJSON.features[index]._id;
     } else {
         return undefined;
@@ -64,8 +64,8 @@ function getFeatureForId(id) {
 }
 
 function changeCoordinatesForPoints() {
-    for(var i = 0; i < geoJSON.features.length; i++) {
-        if(geoJSON.features[i].geometry.type === 'Point') {
+    for (var i = 0; i < geoJSON.features.length; i++) {
+        if (geoJSON.features[i].geometry.type === 'Point') {
             var coordinatesArray = geoJSON.features[i].geometry.coordinates;
             geoJSON.features[i].geometry.coordinates = [coordinatesArray[0][0][0], coordinatesArray[1][0][0]];
         }
@@ -73,23 +73,23 @@ function changeCoordinatesForPoints() {
 }
 
 function getLocalIdForFeatureId(id) {
-    for(var i = 0; i < geoJSON.features.length; i++) {
-        if(geoJSON.features[i]._id === id) {
+    for (var i = 0; i < geoJSON.features.length; i++) {
+        if (geoJSON.features[i]._id === id) {
             return featureIds[i];
         }
     }
 }
 
 function getFeatureForFeatureId(id) {
-    for(var i = 0; i < geoJSON.features.length; i++) {
-        if(geoJSON.features[i]._id === id) {
+    for (var i = 0; i < geoJSON.features.length; i++) {
+        if (geoJSON.features[i]._id === id) {
             return geoJSON.features[i];
         }
     }
 }
 
 function changeCoordinatesForPoint(feature) {
-    if(feature.geometry.type === 'Point') {
+    if (feature.geometry.type === 'Point') {
         var coordinatesArray = feature.geometry.coordinates;
         feature.geometry.coordinates = [coordinatesArray[0][0][0], coordinatesArray[1][0][0]];
         return feature;
@@ -99,7 +99,7 @@ function changeCoordinatesForPoint(feature) {
 }
 
 function getPopupCoordinatesForPolygon(geometry) {
-    if(geometry.type === 'Point') {
+    if (geometry.type === 'Point') {
         return geometry.coordinates;
     } else {
         return geometry.coordinates[0][0];
@@ -109,7 +109,15 @@ function getPopupCoordinatesForPolygon(geometry) {
 function getAreaForFeature(feature) {
     console.log(turf);
     var area = turf.area(feature);
-    return rounded_area = Math.round(area*100)/100;
+    return rounded_area = Math.round(area * 100) / 100;
+}
+
+function showPopup(location, title, description) {
+    var text = '<strong>' + title + '</strong><p>' + description + '</p>';
+    new mapboxgl.Popup({ offset: 25 })
+        .setLngLat(location)
+        .setHTML(text)
+        .addTo(map);
 }
 
 function getParameterByName(name, url) {
