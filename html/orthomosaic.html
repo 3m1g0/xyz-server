@@ -864,7 +864,7 @@
 
     map.on('draw.delete', function(e) {
         console.log(e.features);
-        if (e.features.length > 0) {
+		if (confirm("Are you sure you want to delete this?") && e.features.length > 0) {
             deleteFeatures(e.features[0]);
         }
     });
