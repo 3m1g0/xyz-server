@@ -558,7 +558,7 @@
                                     28th Oct
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('12')">
+                            <div style="background-color: #FFF" onclick="timelineClick('11')">
                                 <img src="../res/developerxyz.7dp1qa5b.png" />
                                 <div>
                                     27th Dec
@@ -812,7 +812,7 @@
                 "maxzoom": 22
             }]
         },
-        center: [78.4, 17.4], // starting position
+        center: [78.377,17.412], // starting position
         zoom: 17 // starting zoom
     });
 
@@ -903,11 +903,11 @@
                 }
             });
             var before = getDrawLaterId();
-            currentLayer = layers[0].id;
+            currentLayer = layers[layers.length - 1].id;
             if (before == undefined) {
-                map.addLayer(layers[0]);
+                map.addLayer(layers[layers.length - 1]);
             } else {
-                map.addLayer(layers[0], getDrawLaterId());
+                map.addLayer(layers[layers.length - 1], getDrawLaterId());
             }
 
             //populateTimeline();
