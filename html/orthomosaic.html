@@ -246,7 +246,15 @@
             transform: scale(1.0);
             opacity: 0;
         }
-    }
+    }	
+		
+	.sidebar .title{
+		display: inline-block;
+	}
+	
+	#timeline{
+		height:0px !important;
+	}
     </style>
     <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Fira+Sans:400,400italic' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
@@ -813,7 +821,8 @@
             }]
         },
         center: [78.377,17.412], // starting position
-        zoom: 17 // starting zoom
+        zoom: 17, // starting zoom
+		attributionControl: false
     });
 
     // Add zoom and rotation controls to the map.
@@ -985,6 +994,7 @@
     var orthomosaicSlider = document.querySelector('#orthoRange');
     orthomosaicSlider.addEventListener('input', function(e) {
         opacity = parseInt(e.target.value, 10) / 100;
+		console.log("opacity" + opacity);
         map.setPaintProperty(currentLayer, 'raster-opacity', parseInt(e.target.value, 10) / 100);
     });
 
@@ -1003,6 +1013,7 @@
         } else {
             map.addLayer(layers[tileset - 1], getDrawLaterId());
         }
+		console.log(opacity);
         map.setPaintProperty(currentLayer, 'raster-opacity', opacity);
     }
 
@@ -1106,6 +1117,12 @@
         }
         return firstSymbolId;
     }
+	
+	$(function(){
+		$('.timeline-btn').on('click',function(){
+			$('body').addClass('is-collapsed');
+		});
+	});
 
     </script>
     <script type="text/javascript" src="../js/vendor.js"></script>
