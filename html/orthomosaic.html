@@ -558,6 +558,12 @@
                                     28th Oct
                                 </div>
                             </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('12')">
+                                <img src="../res/developerxyz.7dp1qa5b.png" />
+                                <div>
+                                    27th Dec
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn timeline-btn" data-toggle="collapse" data-target="#demo">
@@ -710,17 +716,23 @@
             "source": "raster-tiles11",
             "minzoom": 0,
             "maxzoom": 22
+        },
+        {
+            "id": "12",
+            "type": "raster",
+            "source": "raster-tiles12",
+            "minzoom": 0,
+            "maxzoom": 22
         }
     ];
 
     var opacity = 100;
 
-    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b'];
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b', 'developerxyz.6rfzn5rb'];
 
-    var timelineDates = ['3rd Jan', '2nd Feb', '4th Mar', '9th Apr', '7th May', '3rd Jun', '6th Jul', '6th Aug', '8th Sep', '1st Oct', '31st Oct'];
+    var timelineDates = ['3rd Jan', '2nd Feb', '4th Mar', '9th Apr', '7th May', '3rd Jun', '6th Jul', '6th Aug', '8th Sep', '1st Oct', '31st Oct', '27th Dec'];
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ';
-    var tileset = 'developerxyz.4bp49zqb';
     var map = new mapboxgl.Map({
         container: 'map', // container id
         style: {
@@ -785,6 +797,11 @@
                     "type": "raster",
                     "url": "mapbox://" + "developerxyz.7dp1qa5b",
                     "tileSize": 256
+                },
+                "raster-tiles12": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.6rfzn5rb",
+                    "tileSize": 256
                 }
             },
             "layers": [{
@@ -795,8 +812,8 @@
                 "maxzoom": 22
             }]
         },
-        center: [6.565, 46.523], // starting position
-        zoom: 16 // starting zoom
+        center: [78.4, 17.4], // starting position
+        zoom: 17 // starting zoom
     });
 
     // Add zoom and rotation controls to the map.
