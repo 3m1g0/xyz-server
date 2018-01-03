@@ -39,6 +39,10 @@ app.get('/3d', function(req, res){
   res.sendFile(__dirname + '/html/potree.html');
 });
 
+app.get('/3d-mesh', function(req, res){
+  res.sendFile(__dirname + '/html/3d-mesh.html');
+});
+
 app.get('/compare', function(req, res){
   res.sendFile(__dirname + '/html/compare.html');
 });
