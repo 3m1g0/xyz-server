@@ -6,8 +6,12 @@ function uploadFeatures(feature) {
         contentType: "application/json",
         dataType: "json",
         success: function(data) {
-            geoJSON.features.push(changeCoordinatesForPoint(data));
-            geoJSON.features.push(changeCoordinatesForLine(data));
+          if (data.geometry.type ==='Point'){
+              geoJSON.features.push(changeCoordinatesForPoint(data));
+            }
+            else if (data.geometry.type === 'LineString') {
+                geoJSON.features.push(changeCoordinatesForLine(data));
+            }
             console.log("Data added!");
             populateAnnotationsList(geoJSON.features);
         }
@@ -25,8 +29,12 @@ function updateFeatures(feature) {
         dataType: "json",
         success: function(data) {
             var index = featureIds.indexOf(feature.id);
-            geoJSON.features[index] = changeCoordinatesForPoint(data);
-            geoJSON.features[index] = changeCoordinatesForLine(data);
+            if (data.geometry.type === 'Point'){
+                geoJSON.features[index] = changeCoordinatesForPoint(data);
+            }
+            else if (data.geometry.type === 'LineString') {
+                geoJSON.features[index] = changeCoordinatesForLine(data);
+            }
             console.log("Data updated!", data);
             populateAnnotationsList(geoJSON.features);
         }
