@@ -879,7 +879,7 @@
                 popup.remove();
                 if (feature.geometry.type == 'Polygon') {
                     popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
-                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + 'sq.mts.</p>')
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + ' sq.mts.</p>')
                         .addTo(map);
                 } else if (feature.geometry.type == 'Point') {
                     popup.setLngLat(feature.geometry.coordinates)
@@ -887,7 +887,7 @@
                         .addTo(map);
                 } else if (feature.geometry.type == 'LineString') {
                     popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
-                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Length : ' + getLengthForFeature(feature) + 'km.</p>')
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Length : ' + getLengthForFeature(feature) + ' km.</p>')
                         .addTo(map);
                 }
                 console.log(feature);
