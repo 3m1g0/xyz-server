@@ -1033,6 +1033,8 @@
             var center;
             if (feature.geometry.type == 'Polygon') {
                 center = [feature.geometry.coordinates[0][0][0], feature.geometry.coordinates[0][0][1]];
+            } else if (feature.geometry.type == 'LineString') {
+                center = [feature.geometry.coordinates[0][0], feature.geometry.coordinates[0][1]];
             } else {
                 center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
             }
