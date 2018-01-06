@@ -246,12 +246,12 @@
             transform: scale(1.0);
             opacity: 0;
         }
-    }	
-		
+    }
+
 	.sidebar .title{
 		display: inline-block;
 	}
-	
+
 	#timeline{
 		height:0px !important;
 	}
@@ -832,6 +832,7 @@
         displayControlsDefault: false,
         controls: {
             polygon: true,
+            line_string:true,
             point: true,
             trash: true
         }
@@ -851,7 +852,7 @@
     var currentLayer;
     map.on('draw.create', function(e) {
         currentFeature = e.features[0];
-        // jQuery.noConflict(); 
+        // jQuery.noConflict();
         $('#modalSubscription').modal('show');
     });
 
@@ -906,6 +907,7 @@
                 success: function(data) {
                     geoJSON = data;
                     changeCoordinatesForPoints();
+                    changeCoordinatesForLines();
                     console.log("Data fetched!");
                     featureIds = draw.add(data);
                     populateAnnotationsList(geoJSON.features);
@@ -1088,9 +1090,9 @@
 
     (function() {  // DON'T EDIT BELOW THIS LINE
         var d = document, s = d.createElement('script');
-        
+
         s.src = 'https://xyzinnovations.disqus.com/embed.js';
-        
+
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -1117,7 +1119,7 @@
         }
         return firstSymbolId;
     }
-	
+
 	$(function(){
 		$('.timeline-btn').on('click',function(){
 			$('body').addClass('is-collapsed');

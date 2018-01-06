@@ -7,6 +7,7 @@ function uploadFeatures(feature) {
         dataType: "json",
         success: function(data) {
             geoJSON.features.push(changeCoordinatesForPoint(data));
+            geoJSON.features.push(changeCoordinatesForLine(data));
             console.log("Data added!");
             populateAnnotationsList(geoJSON.features);
         }
@@ -25,6 +26,7 @@ function updateFeatures(feature) {
         success: function(data) {
             var index = featureIds.indexOf(feature.id);
             geoJSON.features[index] = changeCoordinatesForPoint(data);
+            geoJSON.features[index] = changeCoordinatesForLine(data);
             console.log("Data updated!", data);
             populateAnnotationsList(geoJSON.features);
         }
@@ -48,6 +50,33 @@ function deleteFeatures(feature) {
         }
     });
 }
+
+function changeCoordinatesForLines(){
+  for (var i = 0; i < geoJSON.features.length; i++) {
+      if (geoJSON.features[i].geometry.type === 'LineString') {
+          var lineFeatures=geoJSON.features[i];
+          var lineCordinatesArray=lineFeatures.geometry.coordinates;
+          for (var j=0; j<lineFeatures.geometry.coordinates.length; j++){
+              lineFeatures.geometry.coordinates[j] = [lineCordinatesArray[j][0][0], lineCordinatesArray[j][1][0]];
+            }
+        }
+    }
+}
+
+function changeCoordinatesForLine(feature) {
+    if (feature.geometry.type === 'LineString') {
+      var coordinatesArray=feature.geometry.coordinates;
+        for (var i=0; i<feature.geometry.coordinates.length; i++){
+          feature.geometry.coordinates[i] = [coordinatesArray[i][0][0], coordinatesArray[i][1][0]];
+        }
+          return feature;
+        }
+    else {
+        return feature;
+    }
+
+}
+
 
 function getIdForFeature(feature) {
     var index = featureIds.indexOf(feature.id);
