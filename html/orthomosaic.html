@@ -879,11 +879,15 @@
                 popup.remove();
                 if (feature.geometry.type == 'Polygon') {
                     popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
-                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + '</p>')
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + 'sq.mts.</p>')
                         .addTo(map);
                 } else if (feature.geometry.type == 'Point') {
                     popup.setLngLat(feature.geometry.coordinates)
                         .setHTML('<strong>' + feature.properties.title + '</strong><p>Loctaion : ' + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3) + '</p>')
+                        .addTo(map);
+                } else if (feature.geometry.type == 'LineString') {
+                    popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Length : ' + getLengthForFeature(feature) + 'km.</p>')
                         .addTo(map);
                 }
                 console.log(feature);

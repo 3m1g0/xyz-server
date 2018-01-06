@@ -130,6 +130,8 @@ function changeCoordinatesForPoint(feature) {
 function getPopupCoordinatesForPolygon(geometry) {
     if (geometry.type === 'Point') {
         return geometry.coordinates;
+    } else if (geometry.type === 'LineString') {
+        return geometry.coordinates[0];
     } else {
         return geometry.coordinates[0][0];
     }
@@ -139,6 +141,11 @@ function getAreaForFeature(feature) {
     console.log(turf);
     var area = turf.area(feature);
     return rounded_area = Math.round(area * 100) / 100;
+}
+
+function getLengthForFeature(feature) {
+    var length = turf.lineDistance(feature, 'kilometers');
+    return round_length = Math.round(length * 100) / 100;
 }
 
 function showPopup(location, title, description) {
