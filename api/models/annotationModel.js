@@ -5,23 +5,23 @@ var Schema = mongoose.Schema;
 
 var AnnotationsSchema = new Schema({
     type: {type: String},
-    'geometry' : {
+    geometry : {
         type: {
             type: String
         },
         'coordinates' : {
-            'type' : [[[Number]]],
-            'required' : true
+            type : [[[Number]]],
+            required : true
         }
     },
-    'properties' : {
-        'title' : String,
-        'description' : String,
-        'date' : { 
+    properties : {
+        title : String,
+        description : String,
+        date : { 
             type: Date, 
             default: Date.now 
         },
-        'extras' : String
+        extras : String
     }
 });
 

@@ -356,6 +356,9 @@
                             <li>
                                 <a href="3d">3D</a>
                             </li>
+                            <li>
+                                <a href="3d-mesh">3D Mesh</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -566,8 +569,8 @@
                                     28th Oct
                                 </div>
                             </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('11')">
-                                <img src="../res/developerxyz.7dp1qa5b.png" />
+                            <div style="background-color: #FFF" onclick="timelineClick('12')">
+                                <img src="../res/developerxyz.6rfzn5rb.png" />
                                 <div>
                                     27th Dec
                                 </div>
@@ -734,7 +737,7 @@
         }
     ];
 
-    var opacity = 100;
+    var opacity = 1;
 
     var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b', 'developerxyz.6rfzn5rb'];
 
@@ -1013,6 +1016,7 @@
     function timelineClick(tileset) {
         map.removeLayer(currentLayer);
         var before = getDrawLaterId();
+        popup.remove();
         currentLayer = tileset;
         if (before == undefined) {
             map.addLayer(layers[tileset - 1]);
@@ -1030,6 +1034,7 @@
         draw.changeMode('simple_select', { 'featureIds': [getLocalIdForFeatureId(myId)] });
         var feature = getFeatureForFeatureId(myId);
         if (feature != undefined) {
+            popup.remove();
             var center;
             if (feature.geometry.type == 'Polygon') {
                 center = [feature.geometry.coordinates[0][0][0], feature.geometry.coordinates[0][0][1]];
@@ -1040,8 +1045,7 @@
             }
             console.log(center);
             map.flyTo({
-                center: center,
-                zoom: 16
+                center: center
             });
         }
     }
@@ -1126,11 +1130,11 @@
         return firstSymbolId;
     }
 
-	$(function(){
-		$('.timeline-btn').on('click',function(){
-			$('body').addClass('is-collapsed');
-		});
-	});
+	// $(function(){
+	// 	$('.timeline-btn').on('click',function(){
+	// 		$('body').addClass('is-collapsed');
+	// 	});
+	// });
 
     </script>
     <script type="text/javascript" src="../js/vendor.js"></script>
