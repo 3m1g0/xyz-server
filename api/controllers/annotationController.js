@@ -59,3 +59,14 @@ exports.delete_a_annotation = function(req, res) {
     });
   });
 };
+
+exports.delete_all_annotations = function(req, res) {
+  Annotation.remove({}, function(err, annotation) {
+    if (err)
+      return res.send(err);
+    res.json({
+      message: 'All annotations successfully deleted'
+      
+    });
+  });
+};

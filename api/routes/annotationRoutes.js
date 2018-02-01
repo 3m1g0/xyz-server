@@ -6,7 +6,8 @@ module.exports = function(app) {
   // annotation Routes
   app.route('/annotations')
     .get(annotationList.list_all_annotations)
-    .post(annotationList.create_a_annotation);
+    .post(annotationList.create_a_annotation)
+    .delete(annotationList.delete_all_annotations);
 
 
   app.route('/annotations/:annotationId')
