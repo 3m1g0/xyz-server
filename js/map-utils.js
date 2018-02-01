@@ -6,10 +6,9 @@ function uploadFeatures(feature) {
         contentType: "application/json",
         dataType: "json",
         success: function(data) {
-          if (data.geometry.type ==='Point'){
-              geoJSON.features.push(changeCoordinatesForPoint(data));
-            }
-            else if (data.geometry.type === 'LineString') {
+            if (data.geometry.type === 'Point') {
+                geoJSON.features.push(changeCoordinatesForPoint(data));
+            } else if (data.geometry.type === 'LineString') {
                 geoJSON.features.push(changeCoordinatesForLine(data));
             }
             console.log("Data added!");
@@ -29,10 +28,9 @@ function updateFeatures(feature) {
         dataType: "json",
         success: function(data) {
             var index = featureIds.indexOf(feature.id);
-            if (data.geometry.type === 'Point'){
+            if (data.geometry.type === 'Point') {
                 geoJSON.features[index] = changeCoordinatesForPoint(data);
-            }
-            else if (data.geometry.type === 'LineString') {
+            } else if (data.geometry.type === 'LineString') {
                 geoJSON.features[index] = changeCoordinatesForLine(data);
             }
             console.log("Data updated!", data);
@@ -59,13 +57,13 @@ function deleteFeatures(feature) {
     });
 }
 
-function changeCoordinatesForLines(){
-  for (var i = 0; i < geoJSON.features.length; i++) {
-      if (geoJSON.features[i].geometry.type === 'LineString') {
-          var lineFeatures=geoJSON.features[i];
-          var lineCordinatesArray=lineFeatures.geometry.coordinates;
-          for (var j=0; j<lineFeatures.geometry.coordinates.length; j++){
-              lineFeatures.geometry.coordinates[j] = [lineCordinatesArray[j][0][0], lineCordinatesArray[j][1][0]];
+function changeCoordinatesForLines() {
+    for (var i = 0; i < geoJSON.features.length; i++) {
+        if (geoJSON.features[i].geometry.type === 'LineString') {
+            var lineFeatures = geoJSON.features[i];
+            var lineCordinatesArray = lineFeatures.geometry.coordinates;
+            for (var j = 0; j < lineFeatures.geometry.coordinates.length; j++) {
+                lineFeatures.geometry.coordinates[j] = [lineCordinatesArray[j][0][0], lineCordinatesArray[j][1][0]];
             }
         }
     }
@@ -73,13 +71,12 @@ function changeCoordinatesForLines(){
 
 function changeCoordinatesForLine(feature) {
     if (feature.geometry.type === 'LineString') {
-      var coordinatesArray=feature.geometry.coordinates;
-        for (var i=0; i<feature.geometry.coordinates.length; i++){
-          feature.geometry.coordinates[i] = [coordinatesArray[i][0][0], coordinatesArray[i][1][0]];
+        var coordinatesArray = feature.geometry.coordinates;
+        for (var i = 0; i < feature.geometry.coordinates.length; i++) {
+            feature.geometry.coordinates[i] = [coordinatesArray[i][0][0], coordinatesArray[i][1][0]];
         }
-          return feature;
-        }
-    else {
+        return feature;
+    } else {
         return feature;
     }
 
@@ -172,4 +169,26 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function calculateSetBacks(innerFeature, outerFeature) {
+    var innerCoordinates = innerFeature.geometry.coordinates;
+    var outerCoordinates = outerFeature.geometry.coordinates;
+    
+    var setbacks = [];
+    for (var i = 0; i < innerCoordinates[0].length - 1; i++) {
+        var pt = turf.point(innerCoordinates[0][i]);
+        console.log(pt);
+        var distances = [];
+        for (var j = 0; j < outerCoordinates[0].length - 1; j++) {
+            var line = turf.lineString([outerCoordinates[0][j], outerCoordinates[0][j+1]]);
+            //console.log(line);
+            var distance = turf.pointToLineDistance(pt, line, {units: 'meters'});
+            console.log(distance + " meters");
+            distances.push(distance);
+        }
+        console.log(Math.min(...distances));
+
+    }
+
 }
