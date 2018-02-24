@@ -510,7 +510,7 @@
             <main class='bgc-grey-100'>
                 <div id='map' style="height: calc(100% - 70px); width: calc(100% - 70px);; position: absolute !important; margin-top: 65px;">
                 </div>
-                <div class="container-fluid p-0" style="height: 0px; width: calc(100% - 70px); position: absolute !important; margin-top: 0px; text-align: center;">
+                <div class="container-fluid p-0" style="height: 180px; width: calc(100% - 70px); position: absolute !important; margin-top: 63px; text-align: center;">
                     <div id="demo" class="collapse" style="background-color: rgba(62, 60, 60, 0.9); padding:10px">
                         <div class="owl-carousel" id="timeline-carousel">
                             <div style="background-color: #FFF" onclick="timelineClick('1')">
@@ -577,12 +577,6 @@
                                 <img src="../res/developerxyz.7dp1qa5b.png" />
                                 <div>
                                     28th Oct
-                                </div>
-                            </div>
-                            <div style="background-color: #FFF" onclick="timelineClick('12')">
-                                <img src="../res/developerxyz.cp6j52u5.png" />
-                                <div>
-                                    27th Dec
                                 </div>
                             </div>
                         </div>
@@ -739,19 +733,12 @@
             "source": "raster-tiles11",
             "minzoom": 0,
             "maxzoom": 22
-        },
-        {
-            "id": "12",
-            "type": "raster",
-            "source": "raster-tiles12",
-            "minzoom": 0,
-            "maxzoom": 22
         }
     ];
 
     var opacity = 1;
 
-    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b', 'developerxyz.avh9u2w7'];
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b'];
 
     var timelineDates = ['3rd Jan, 2017', '2nd Feb, 2017', '4th Mar, 2017', '9th Apr, 2017', '7th May, 2017', '3rd Jun, 2017', '6th Jul, 2017', '6th Aug, 2017', '8th Sep, 2017', '1st Oct, 2017', '31st Oct, 2017', '21st Jan, 2018'];
 
@@ -820,13 +807,6 @@
                     "type": "raster",
                     "url": "mapbox://" + "developerxyz.7dp1qa5b",
                     "tileSize": 256
-                },
-                "raster-tiles12": {
-                    "type": "raster",
-                    tiles: [
-                        "http://a.tiles.mapbox.com/v4/developerxyz.54dlnbnh/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoiZGV2ZWxvcGVyeHl6IiwiYSI6ImNqYjY3d2cwZzA0enkycW13ODZ1OHh0OWoifQ.XE0EgfIUJqyTHQ8iOE5bGQ"
-                    ],
-                    "tileSize": 256
                 }
             },
             "layers": [{
@@ -837,7 +817,7 @@
                 "maxzoom": 22
             }]
         },
-        center: [83.351327, 17.827053], // starting position
+        center: [6.565, 46.523], // starting position
         zoom: 16.6, // starting zoom
         attributionControl: false,
         preserveDrawingBuff: true
@@ -850,7 +830,6 @@
         displayControlsDefault: false,
         controls: {
             polygon: true,
-            line_string: true,
             point: true,
             trash: true
         }
