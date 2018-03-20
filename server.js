@@ -36,7 +36,7 @@ app.get('/orthomosaic', function(req, res){
 });
 
 app.get('/tirupati', function(req, res){
-  res.sendFile(__dirname + '/html/tirupati.html');
+  res.sendFile(__dirname + '/html/drone.html');
 });
 
 app.get('/3d', function(req, res){
