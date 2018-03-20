@@ -1,0 +1,1156 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Orthomosaic</title>
+    <style>
+    #loader {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        visibility: visible;
+        position: fixed;
+        height: 100vh;
+        width: 100%;
+        background: #fff;
+        z-index: 90000;
+    }
+
+    #loader.fadeOut {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .timeline-btn {
+        border-radius: 0 0 10px 10px;
+        outline: 0!important;
+        padding: 1px 17px!important;
+    }
+
+    .timeline-btn .glyphicon-chevron-down {
+        font-size: 15px;
+        color: #000;
+    }
+
+    .owl-item {
+        padding: 1px;
+    }
+
+    .owl-next,
+    .owl-prev {
+        color: #fff;
+        font-size: 15px;
+        border: 2px solid rgba(0, 0, 0, .8);
+        background: rgba(0, 0, 0, .8);
+        border-radius: 20px;
+        position: absolute;
+        top: 20px;
+    }
+
+    .owl-prev .glyphicon,
+    .owl-next .glyphicon {
+        background: rgba(0, 0, 0, .8);
+    }
+
+    .owl-next {
+        right: 0;
+    }
+
+    .owl-prev {
+        left: 0;
+    }
+
+    .floating-label {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .floating-input,
+    .floating-select {
+        font-size: 14px;
+        padding: 4px 4px;
+        display: block;
+        width: 100%;
+        height: 30px;
+        margin-left: 30px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #757575;
+    }
+
+    .floating-input:focus,
+    .floating-select:focus {
+        outline: none;
+        border-bottom: 2px solid #5264AE;
+    }
+
+    label {
+        color: #999;
+        font-size: 14px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 20px;
+        margin-left: 20px;
+        top: 5px;
+        transition: 0.2s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    .floating-input:focus~label,
+    .floating-input:not(:placeholder-shown)~label {
+        top: -8px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+
+    .floating-select:focus~label,
+    .floating-select:not([value=""]):valid~label {
+        top: -18px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+    /* active state */
+
+    .floating-input:focus~.bar:before,
+    .floating-input:focus~.bar:after,
+    .floating-select:focus~.bar:before,
+    .floating-select:focus~.bar:after {
+        width: 50%;
+    }
+
+    *,
+    *:before,
+    *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .floating-textarea {
+        min-height: 25px;
+        max-height: 260px;
+        overflow: hidden;
+        overflow-x: hidden;
+    }
+    /* highlighter */
+
+    .highlight {
+        position: absolute;
+        height: 50%;
+        width: 100%;
+        top: 15%;
+        left: 0;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    /* active state */
+
+    .floating-input:focus~.highlight,
+    .floating-select:focus~.highlight {
+        -webkit-animation: inputHighlighter 0.3s ease;
+        -moz-animation: inputHighlighter 0.3s ease;
+        animation: inputHighlighter 0.3s ease;
+    }
+
+    #annotationSearchBox {
+        background-image: url('../res/search.png');
+        /* Add a search icon to input */
+        background-position: 10px 16px;
+        /* Position the search icon */
+        background-repeat: no-repeat;
+        /* Do not repeat the icon image */
+        width: 75%;
+        /* Full-width */
+        font-size: 12px;
+        /* Increase font-size */
+        padding: 6px 20px 6px 40px;
+        /* Add some padding */
+        border: 1px solid #ddd;
+        /* Add a grey border */
+        margin-bottom: 12px;
+        /* Add some space below the input */
+    }
+
+    #disqus_thread {
+        position: relative;
+    }
+
+    #disqus_thread li.tab-community {
+        content: "";
+        display: none;
+        height: 55px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background: white;
+    }
+
+    #disqus_thread:after {
+        content: "";
+        display: block;
+        height: 55px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        background: white;
+    }
+
+    .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
+        display: inherit;
+    }
+
+    .mapboxgl-ctrl-bottom-left {
+        width: 100%;
+        justify-content: center;
+        display: inline-flex;
+    }
+
+    a.mapboxgl-ctrl-logo {
+        display: none !important;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: calc(50% - 20px);
+        left: calc(50% - 20px);
+        background-color: #333;
+        border-radius: 100%;
+        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+        animation: sk-scaleout 1.0s infinite ease-in-out;
+    }
+
+    .modal .modal-full-height {
+        height: auto !important;
+    }
+
+    @-webkit-keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0)
+        }
+        100% {
+            -webkit-transform: scale(1.0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+        100% {
+            -webkit-transform: scale(1.0);
+            transform: scale(1.0);
+            opacity: 0;
+        }
+    }
+
+    .sidebar .title {
+        display: inline-block;
+    }
+
+    #timeline {
+        height: 0px !important;
+    }
+    </style>
+      <script>
+        var chat_name = 'LOGGEDIN_USERS_NAME';
+        var chat_id = 'LOGGEDIN_USERS_UNIQUE_ID';
+        var chat_avatar = 'LOGGEDIN_PROFILE_IMAGE';
+        var chat_link = 'LOGGEDIN_USERS_PROFILE_LINK';
+        var chat_role = 'USER_ROLE';
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Fira+Sans:400,400italic' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="../css/owl.carousel.min.css">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="https://mdbootstrap.com/live/_MDB/css/compiled.min.css" rel="stylesheet">
+    <!-- <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script><link type="text/css" rel="stylesheet" media="all" href="//fast.cometondemand.net/50218x_xf88ed.css" /> -->
+    <style type="text/css">
+    html {
+        font-size: 100%;
+    }
+    </style>
+    <script src="../js/jquery-2.1.4.js"></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl.js'></script>
+    <script type="text/javascript" src='../js/mapbox-gl-draw.js'></script>
+    <script type="text/javascript" src="../js/map-utils.js"></script>
+    <script type="text/javascript" src="../js/owl.carousel.min.js"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="//fast.cometondemand.net/50218x_xf88ed.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body class="app">
+    <!-- @TOC -->
+    <!-- =================================================== -->
+    <!--
+      + @Page Loader
+      + @App Content
+          - #Left Sidebar
+              > $Sidebar Header
+              > $Sidebar Menu
+
+          - #Main
+              > $Topbar
+              > $App Screen Content
+    -->
+    <!-- @Page Loader -->
+    <!-- =================================================== -->
+    <div id='loader'>
+        <div class="spinner"></div>
+    </div>
+    <script type="text/javascript">
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('loader');
+        setTimeout(() => {
+            loader.classList.add('fadeOut');
+        }, 300);
+    });
+    </script>
+    <!-- @App Content -->
+    <!-- =================================================== -->
+    <div>
+        <!-- #Left Sidebar ==================== -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <!-- ### $Sidebar Header ### -->
+                <div class="sidebar-logo">
+                    <div class="peers ai-c fxw-nw">
+                        <div class="peer peer-greed">
+                            <a class='sidebar-link td-n' href="#" class="td-n">
+                                <div class="peers ai-c fxw-nw">
+                                    <div class="peer">
+                                        <div class="logo">
+                                            <img src="../res/logo.png" alt="" class="logo-img">
+                                        </div>
+                                    </div>
+                                    <div class="peer peer-greed">
+                                        <h5 class="lh-1 mB-0 logo-text">XYZ INNOTECH</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="peer">
+                            <div class="mobile-toggle sidebar-toggle">
+                                <a href="" class="td-n">
+                    <i class="ti-arrow-circle-left"></i>
+                  </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ### $Sidebar Menu ### -->
+                <ul class="sidebar-menu scrollable pos-r">
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-blue-500 ti-home"></i>
+                  </span>
+                <span class="title">Dashboard</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="orthomosaic">Orthomosaic</a>
+                            </li>
+                            <li>
+                                <a href="3d">3D</a>
+                            </li>
+                            <li>
+                                <a href="3d-mesh">3D Mesh</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-pink-500 ti-palette"></i>
+                  </span>
+                <span class="title">Opacity</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="opaOpt">
+                                    <fieldset class="form-group">
+                                        <input type="checkbox" class="filled-in" checked="checked" id="orthoCheckbox">
+                                        <a class='sidebar-link' href="#" for="orthoCheckbox">Orthomosiac</a>
+                                    </fieldset>
+                                    <form id="orthoRange" class="range-field">
+                                        <input type="range" min="0" max="100" value="100" />
+                                    </form>
+                                </div>
+                            </li>
+                            <li>
+                                <fieldset class="form-group">
+                                    <input type="checkbox" class="filled-in" checked="checked" id="baseCheckbox">
+                                    <a class='sidebar-link' href="#" for="baseCheckbox">Basemap</a>
+                                </fieldset>
+                                <form id="baseRange" class="range-field">
+                                    <input type="range" min="0" max="100" value="100" />
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="c-red-500 ti-files"></i>
+                  </span>
+                <span class="title">Annotations</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                  </span>
+              </a>
+                        <ul class="dropdown-menu" id="annotationList">
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class='sidebar-link' href="compare">
+                <span class="icon-holder">
+                  <i class="c-indigo-500 ti-bar-chart"></i>
+                </span>
+                <span class="title">Compare</span>
+              </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- #Main ============================ -->
+        <div class="page-container">
+            <!-- ### $Topbar ### -->
+            <div class="header navbar">
+                <div class="header-container">
+                    <ul class="nav-left">
+                        <li>
+                            <a id='sidebar-toggle' class="sidebar-toggle" href="javascript:void(0);">
+                  <i class="ti-menu"></i>
+                </a>
+                        </li>
+                        <li class="search-box">
+                            <a class="search-toggle no-pdd-right" href="javascript:void(0);">
+                  <i class="search-icon ti-search pdd-right-10"></i>
+                  <i class="search-icon-close ti-close pdd-right-10"></i>
+                </a>
+                        </li>
+                        <li class="search-input">
+                            <input class="form-control" type="text" placeholder="Search...">
+                        </li>
+                    </ul>
+                    <ul class="nav-right">
+                        <li class="notifications dropdown">
+                            <span class="counter bgc-red">3</span>
+                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
+                  <i class="ti-bell"></i>
+                </a>
+                            <ul class="dropdown-menu">
+                            </ul>
+                        </li>
+                        <li class="notifications dropdown">
+                            <span class="counter bgc-blue">3</span>
+                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
+                  <i class="ti-email"></i>
+                </a>
+                            <ul class="dropdown-menu">
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
+                                <div class="peer mR-10">
+                                    <img class="w-2r bdrs-50p" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">
+                                </div>
+                                <div class="peer">
+                                    <span class="fsz-sm c-grey-900">Chaitanya</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu fsz-sm">
+                                <li>
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-settings mR-10"></i>
+                      <span>Setting</span>
+                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-user mR-10"></i>
+                      <span>Profile</span>
+                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-email mR-10"></i>
+                      <span>Messages</span>
+                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                      <i class="ti-power-off mR-10"></i>
+                      <span>Logout</span>
+                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ### $App Screen Content ### -->
+            <main class='bgc-grey-100'>
+                <div id='map' style="height: calc(100% - 70px); width: calc(100% - 70px);; position: absolute !important; margin-top: 65px;">
+                </div>
+                <div class="container-fluid p-0" style="height: 180px; width: calc(100% - 70px); position: absolute !important; margin-top: 63px; text-align: center;">
+                    <div id="demo" class="collapse" style="background-color: rgba(62, 60, 60, 0.9); padding:10px">
+                        <div class="owl-carousel" id="timeline-carousel">
+                            <div style="background-color: #FFF" onclick="timelineClick('1')">
+                                <img src="../res/developerxyz.4bp49zqb.png" />
+                                <div>
+                                    3rd Jan
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('2')">
+                                <img src="../res/developerxyz.97ii82hq.png" />
+                                <div>
+                                    7th Feb
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('3')">
+                                <img src="../res/developerxyz.8sv2sr03.png" />
+                                <div>
+                                    4th Mar
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('4')">
+                                <img src="../res/developerxyz.1q6j39re.png" />
+                                <div>
+                                    8th Apr
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('5')">
+                                <img src="../res/developerxyz.9ohz1fb1.png" />
+                                <div>
+                                    2nd May
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('6')">
+                                <img src="../res/developerxyz.ay58n3um.png" />
+                                <div>
+                                    9th Jun
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('7')">
+                                <img src="../res/developerxyz.3wbs9pyc.png" />
+                                <div>
+                                    6th Jul
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('8')">
+                                <img src="../res/developerxyz.14okwdi4.png" />
+                                <div>
+                                    4th Aug
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('9')">
+                                <img src="../res/developerxyz.bm55h55w.png" />
+                                <div>
+                                    3rd Sep
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('10')">
+                                <img src="../res/developerxyz.a5yr0pkg.png" />
+                                <div>
+                                    1st Oct
+                                </div>
+                            </div>
+                            <div style="background-color: #FFF" onclick="timelineClick('11')">
+                                <img src="../res/developerxyz.7dp1qa5b.png" />
+                                <div>
+                                    28th Oct
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <button type="button" class="btn timeline-btn" data-toggle="collapse" data-target="#demo">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button> -->
+                </div>
+            </main>
+            <div class="modal fade" id="modalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal" role="document">
+                    <!--Content-->
+                    <div class="modal-content">
+                        <!--Header-->
+                        <div class="modal-header light-blue darken-3 white-text">
+                            <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="title"><i class="fa fa-newspaper-o"></i> New annotation</h4>
+                        </div>
+                        <!--Body-->
+                        <div class="modal-body mb-0">
+                            <div class="floating-label">
+                                <i class="fa fa-tag prefix"></i>
+                                <input class="floating-input" type="text" placeholder=" " id="annotationTitleField" style="height:25px;">
+                                <span class="highlight"></span>
+                                <label for="form27">Title</label>
+                            </div>
+                            <div class="floating-label">
+                                <i class="fa fa-pencil prefix"></i>
+                                <textarea type="text" id="annotationDescField" class="floating-input" placeholder=" "></textarea>
+                                <label for="form8">Description</label>
+                            </div>
+                            <div class="text-center mt-1-half">
+                                <button id="newAnnoSubmit" class="btn btn-info mb-1">Submit <i class="fa fa-check ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.Content-->
+                </div>
+            </div>
+            <!--Modal: Subscription From-->
+            <!-- Modal Message-->
+            <div class="modal fade right" id="basicExample" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-full-height modal-right" role="document">
+                    <!--Content-->
+                    <div class="modal-content">
+                        <!--Body-->
+                        <div class="modal-body">
+                            <div id="disqus_thread" style="background-color: '#fff'"></div>
+                        </div>
+                    </div>
+                    <!--/.Content-->
+                </div>
+            </div>
+            <!-- Modal Message-->
+            <div class="modal fade right" id="panoramaModal" role="dialog">
+                <div class="modal-dialog modal-full-height modal-lg modal-right" role="document">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <p class="heading lead">Panorama View</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="panorama"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Message-->
+            <!-- ### $App Screen Footer ### -->
+            <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
+                <!-- <span>Copyright © 2017 Designed by <a href="https://colorlib.com" target='_blank' title="Colorlib">Colorlib</a>. All rights reserved.</span> -->
+
+               
+            </footer>
+        </div>
+    </div>
+    <script>
+    var layers = [{
+            "id": "1",
+            "type": "raster",
+            "source": "raster-tiles1",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "2",
+            "type": "raster",
+            "source": "raster-tiles2",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "3",
+            "type": "raster",
+            "source": "raster-tiles3",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "4",
+            "type": "raster",
+            "source": "raster-tiles4",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "5",
+            "type": "raster",
+            "source": "raster-tiles5",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "6",
+            "type": "raster",
+            "source": "raster-tiles6",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "7",
+            "type": "raster",
+            "source": "raster-tiles7",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "8",
+            "type": "raster",
+            "source": "raster-tiles8",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "9",
+            "type": "raster",
+            "source": "raster-tiles9",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "10",
+            "type": "raster",
+            "source": "raster-tiles10",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "11",
+            "type": "raster",
+            "source": "raster-tiles11",
+            "minzoom": 0,
+            "maxzoom": 22
+        },
+        {
+            "id": "12",
+            "type": "raster",
+            "source": "raster-tiles12",
+            "minzoom": 0,
+            "maxzoom": 22
+        }
+    ];
+
+    var opacity = 1;
+
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b', 'ktthealmighty.aob1quiv'];
+
+    var timelineDates = ['3rd Jan, 2017', '2nd Feb, 2017', '4th Mar, 2017', '9th Apr, 2017', '7th May, 2017', '3rd Jun, 2017', '6th Jul, 2017', '6th Aug, 2017', '8th Sep, 2017', '1st Oct, 2017', '31st Oct, 2017', '21st Jan, 2018', '3rd Mar, 2018'];
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia3R0aGVhbG1pZ2h0eSIsImEiOiJjajRlZTd0aTkwMjNyMndwcTkxb2ZvcWM1In0.UQPL-sMo5nj0qQLNHmgpaA';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: {
+            "version": 8,
+            "sources": {
+                "satellite-tiles": {
+                    "type": "raster",
+                    "url": "mapbox://" + "mapbox.satellite",
+                    "tileSize": 256
+                },
+                "raster-tiles1": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.4bp49zqb",
+                    "tileSize": 256
+                },
+                "raster-tiles2": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.97ii82hq",
+                    "tileSize": 256
+                },
+                "raster-tiles3": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.8sv2sr03",
+                    "tileSize": 256
+                },
+                "raster-tiles4": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.1q6j39re",
+                    "tileSize": 256
+                },
+                "raster-tiles5": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.9ohz1fb1",
+                    "tileSize": 256
+                },
+                "raster-tiles6": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.ay58n3um",
+                    "tileSize": 256
+                },
+                "raster-tiles7": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.3wbs9pyc",
+                    "tileSize": 256
+                },
+                "raster-tiles8": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.14okwdi4",
+                    "tileSize": 256
+                },
+                "raster-tiles9": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.bm55h55w",
+                    "tileSize": 256
+                },
+                "raster-tiles10": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.a5yr0pkg",
+                    "tileSize": 256
+                },
+                "raster-tiles11": {
+                    "type": "raster",
+                    "url": "mapbox://" + "developerxyz.7dp1qa5b",
+                    "tileSize": 256
+                },
+                "raster-tiles12": {
+                    "type": "raster",
+                    "url": "mapbox://" + "ktthealmighty.aob1quiv",
+                    "tileSize": 256
+                }
+            },
+            "layers": [{
+                "id": "satellite",
+                "type": "raster",
+                "source": "satellite-tiles",
+                "minzoom": 0,
+                "maxzoom": 22
+            }]
+        },
+        center: [79.57135526784072, 13.642497004968643], // starting position
+        zoom: 16, // starting zoom
+        attributionControl: false,
+        preserveDrawingBuff: true
+    });
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl(), "bottom-left");
+
+    var draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+            polygon: true,
+            point: true,
+            trash: true
+        }
+    });
+    map.addControl(draw, "bottom-left");
+
+    var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: true,
+        offset: 25
+    });
+
+    var featureIds;
+    var geoJSON;
+    var currentFeature;
+    var isSubmitClicked = false;
+    var currentLayer;
+    map.on('draw.create', function(e) {
+        currentFeature = e.features[0];
+        $('#modalSubscription').modal('show');
+    });
+
+    map.on('draw.update', function(e) {
+        if (e.features.length > 0) {
+            updateFeatures(e.features[0]);
+            populateAnnotationsList(geoJSON.features);
+        }
+    });
+
+    map.on('draw.delete', function(e) {
+        popup.remove();
+        console.log(e.features);
+        if (confirm("Are you sure you want to delete this?") && e.features.length > 0) {
+            deleteFeatures(e.features[0]);
+        }
+    });
+
+    map.on('draw.selectionchange', function(e) {
+        if (e.features.length > 0) {
+            var feature = getFeatureForId(e.features[0].id);
+            console.log(feature);
+            if (feature) {
+                // $("#basicExample").modal('show');
+                popup.remove();
+                if (feature.geometry.type == 'Polygon') {
+                    popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Area : ' + getAreaForFeature(feature) + ' sq.mts.</p>')
+                        .addTo(map);
+                } else if (feature.geometry.type == 'Point') {
+                    popup.setLngLat(feature.geometry.coordinates)
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Loctaion : ' + feature.geometry.coordinates[0].toFixed(3) + ',' + feature.geometry.coordinates[1].toFixed(3) + '</p>')
+                        .addTo(map);
+                } else if (feature.geometry.type == 'LineString') {
+                    popup.setLngLat(getPopupCoordinatesForPolygon(feature.geometry))
+                        .setHTML('<strong>' + feature.properties.title + '</strong><p>Length : ' + getLengthForFeature(feature) + ' km.</p>')
+                        .addTo(map);
+                }
+                $('#annotationList li a').removeClass("active");
+                $('#annoListItem' + feature._id).addClass("active");
+            }
+        } else {
+            $('#annotationList li a').removeClass("active");
+        }
+    });
+
+    map.on('load', function(e) {
+        map.loadImage('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678135-sticky-note-128.png', function(error, image) {
+            if (error) throw error;
+            map.addImage('cat', image);
+            $.ajax({
+                type: 'GET',
+                url: '/annotations',
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data) {
+                    geoJSON = data;
+                    changeCoordinatesForPoints();
+                    changeCoordinatesForLines();
+                    console.log("Data fetched!");
+                    featureIds = draw.add(data);
+                    populateAnnotationsList(geoJSON.features);
+                    // calculateSetBacks(getFeatureForFeatureId('5a6adb5db244534d546e871d'), getFeatureForFeatureId('5a6adbacb244534d546e871e'))
+                }
+            });
+            var before = getDrawLaterId();
+            currentLayer = layers[layers.length - 1].id;
+            console.log(currentLayer);
+            if (before == undefined) {
+                map.addLayer(layers[layers.length - 1]);
+            } else {
+                map.addLayer(layers[layers.length - 1], getDrawLaterId());
+            }
+
+            //populateTimeline();
+
+            // var owl = $('.owl-carousel');
+            // owl.owlCarousel({
+            //     loop: false,
+            //     nav: true,
+            //     margin: 10,
+            //     responsive: {
+            //         0: {
+            //             items: 2
+            //         },
+            //         600: {
+            //             items: 4
+            //         },
+            //         960: {
+            //             items: 6
+            //         },
+            //         1200: {
+            //             items: 8
+            //         }
+            //     }
+            // });
+            // owl.on('mousewheel', '.owl-stage', function(e) {
+            //     if (e.deltaY > 0) {
+            //         owl.trigger('next.owl');
+            //     } else {
+            //         owl.trigger('prev.owl');
+            //     }
+            //     e.preventDefault();
+            // });
+            // $('.owl-prev')[0].innerHTML = "<span class='glyphicon glyphicon-chevron-left'></span>"
+            // $('.owl-next')[0].innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>"
+        });
+    });
+
+    $('#basicExample').on('show.bs.modal', function(e) {
+        var annotationId = $(e.relatedTarget).data('id');
+        reset(annotationId, annotationId);
+    });
+
+    $('#panoramaModal').on('show.bs.modal', function(e) {
+        var panoId = $(e.relatedTarget).data('id');
+        pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": "../panoramas/pano" + panoId + ".jpg"
+        });
+    });
+
+    $('#modalSubscription').on('show.bs.modal', function(e1) {
+        $(this).find("text,input,textarea,select").val('').end();
+    });
+
+    $('#modalSubscription').on('hidden.bs.modal', function(e1) {
+        if (isSubmitClicked && $('#annotationTitleField').val() != '') {
+            if (currentFeature != undefined) {
+                featureIds.push(currentFeature.id);
+                currentFeature.properties.title = $('#annotationTitleField').val();
+                currentFeature.properties.description = $('#annotationDescField').val();
+                uploadFeatures(currentFeature);
+            }
+        } else {
+            draw.delete([currentFeature.id]);
+        }
+    })
+
+    $('#newAnnoSubmit').on('click', function() {
+        if ($('#annotationTitleField').val() != '') {
+            $("#modalSubscription").modal('hide');
+            isSubmitClicked = true;
+        }
+    });
+
+    var orthomosaicSlider = document.querySelector('#orthoRange');
+    orthomosaicSlider.addEventListener('input', function(e) {
+        opacity = parseInt(e.target.value, 10) / 100;
+        // console.log("opacity" + opacity);
+        map.setPaintProperty(currentLayer, 'raster-opacity', parseInt(e.target.value, 10) / 100);
+    });
+
+    var satelliteSlider = document.querySelector('#baseRange');
+    satelliteSlider.addEventListener('input', function(e) {
+        map.setPaintProperty('satellite', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+    });
+
+
+    function timelineClick(tileset) {
+        map.removeLayer(currentLayer);
+        var before = getDrawLaterId();
+        popup.remove();
+        currentLayer = tileset;
+        if (before == undefined) {
+            map.addLayer(layers[tileset - 1]);
+        } else {
+            map.addLayer(layers[tileset - 1], getDrawLaterId());
+        }
+        // console.log(opacity);
+        map.setPaintProperty(currentLayer, 'raster-opacity', opacity);
+    }
+
+    function annotationItemClick(id) {
+        var myId = id.replace('annoListItem', '');
+        $('#annotationList li a').removeClass("active");
+        $('#annoListItem' + myId).addClass("active");
+        draw.changeMode('simple_select', { 'featureIds': [getLocalIdForFeatureId(myId)] });
+        var feature = getFeatureForFeatureId(myId);
+        if (feature != undefined) {
+            popup.remove();
+            var center;
+            if (feature.geometry.type == 'Polygon') {
+                center = [feature.geometry.coordinates[0][0][0], feature.geometry.coordinates[0][0][1]];
+            } else if (feature.geometry.type == 'LineString') {
+                center = [feature.geometry.coordinates[0][0], feature.geometry.coordinates[0][1]];
+            } else {
+                center = [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
+            }
+            console.log(center);
+            map.flyTo({
+                center: center,
+                zoom: 16.6
+            });
+        }
+    }
+
+    function populateAnnotationsList(features) {
+        var listEl = document.getElementById('annotationList');
+
+        var populateList = function(arr) {
+            var str = '<li><input type="text" id="annotationSearchBox" onkeyup="filterAnnotationsList()" placeholder="Search for annotations.." onkeypress="annoSearch(event)"></li>';
+            var panId = 0;
+            for (var i = 0; i < arr.length; i++) {
+                panId = i % 3;
+                str += '<li><a class="sidebar-link" id="annoListItem' + (arr[i]._id) + '" onClick="annotationItemClick(this.id)"><span data-target="#basicExample" data-toggle="modal" data-tooltip="tooltip" title="Comments" data-id="' + arr[i]._id + '"class="fa fa-commenting-o">&nbsp;</span>' + arr[i].properties.title + '</a></li>';
+            }
+            return str;
+        }
+
+        listEl.innerHTML = populateList(features);
+    }
+
+    function filterAnnotationsList() {
+        var input, filter, ul, li, span, i;
+        input = document.getElementById("annotationSearchBox");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("annotationList");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a != undefined) {
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function populateTimeline() {
+        var str = '';
+        var owlCarousel = document.getElementById('timeline-carousel');
+        for (var i = 0; i < layers.length; i++) {
+            str += '<div style="background-color: #FFF" onclick="timelineClick(' + (i + 1) + ')" ><img src="../res/' + tilesets[i] + '.png" /><div>' + timelineDates[i] + '</div></div>';
+        }
+        owlCarousel.innerHTML = str;
+    }
+
+    var disqus_config = function() {
+        this.page.url = window.location.href + "/polavaram";
+        this.page.identifier = "12345678";
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = 'https://xyzinnovations.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+    var reset = function(newIdentifier, newUrl) {
+        DISQUS.reset({
+            reload: true,
+            config: function() {
+                this.page.identifier = newIdentifier;
+                this.page.url = window.location.href + "/" + newUrl;
+            }
+        });
+    };
+
+    var getDrawLaterId = function() {
+        var mapLayers = map.getStyle().layers;
+        // Find the index of the first symbol layer in the map style
+        var firstSymbolId;
+        for (var i = 0; i < mapLayers.length; i++) {
+            if (mapLayers[i].id.startsWith('gl-draw-')) {
+                firstSymbolId = mapLayers[i].id;
+                break;
+            }
+        }
+        return firstSymbolId;
+    }
+
+    // $(function(){
+    //  $('.timeline-btn').on('click',function(){
+    //      $('body').addClass('is-collapsed');
+    //  });
+    // });
+    </script>
+    <script type="text/javascript" src="../js/vendor.js"></script>
+    <script type="text/javascript" src="../js/bundle.js"></script>
+  
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+    <!-- Place the following code before your site's closing </body> tag -->
+    <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
+</body>
+
+</html>
