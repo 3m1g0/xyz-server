@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use('/js', express.static('js'));
 app.use('/css', express.static('css'));
 app.use('/res', express.static('res'));
+app.use('/assets', express.static('html/assets'));
 app.use('/panoramas', express.static('panoramas'));
 
 app.get('/index', function(req, res){
@@ -61,6 +62,6 @@ routes(app);
 var server = app.listen(port, function () {
    var host = server.address().address;
    var port = server.address().port;
-   
+
    console.log("Example app listening at http://%s:%s", host, port);
 })

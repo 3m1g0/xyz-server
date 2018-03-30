@@ -652,7 +652,7 @@
             <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600">
                 <!-- <span>Copyright © 2017 Designed by <a href="https://colorlib.com" target='_blank' title="Colorlib">Colorlib</a>. All rights reserved.</span> -->
 
-               
+
             </footer>
         </div>
     </div>
@@ -738,7 +738,7 @@
 
     var opacity = 1;
 
-    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.7dp1qa5b'];
+    var tilesets = ['developerxyz.4bp49zqb', 'developerxyz.97ii82hq', 'developerxyz.8sv2sr03', 'developerxyz.1q6j39re', 'developerxyz.9ohz1fb1', 'developerxyz.ay58n3um', 'developerxyz.3wbs9pyc', 'developerxyz.14okwdi4', 'developerxyz.bm55h55w', 'developerxyz.a5yr0pkg', 'developerxyz.9q7cybh8'];
 
     var timelineDates = ['3rd Jan, 2017', '2nd Feb, 2017', '4th Mar, 2017', '9th Apr, 2017', '7th May, 2017', '3rd Jun, 2017', '6th Jul, 2017', '6th Aug, 2017', '8th Sep, 2017', '1st Oct, 2017', '31st Oct, 2017', '21st Jan, 2018'];
 
@@ -752,6 +752,11 @@
                     "type": "raster",
                     "url": "mapbox://" + "mapbox.satellite",
                     "tileSize": 256
+                },
+                "parcels-source": {
+                    "type": "geojson",
+                    "data": "assets/parcels.json",
+                    // "tileSize": 256
                 },
                 "raster-tiles1": {
                     "type": "raster",
@@ -805,7 +810,7 @@
                 },
                 "raster-tiles11": {
                     "type": "raster",
-                    "url": "mapbox://" + "developerxyz.7dp1qa5b",
+                    "url": "mapbox://" + "developerxyz.9q7cybh8",
                     "tileSize": 256
                 }
             },
@@ -814,11 +819,20 @@
                 "type": "raster",
                 "source": "satellite-tiles",
                 "minzoom": 0,
-                "maxzoom": 22
-            }]
+                "maxzoom": 22,
+            },
+          {
+            "id":"parcels",
+            "type":"symbol",
+            "source":"parcels-source",
+            "layout":{
+              "icon-image":"cat",
+              "icon-size":0.25
+            }
+          }]
         },
-        center: [6.565, 46.523], // starting position
-        zoom: 16.6, // starting zoom
+        center: [81.109,16.717], // starting position
+        zoom: 16.7, // starting zoom
         attributionControl: false,
         preserveDrawingBuff: true
     });
@@ -921,6 +935,8 @@
             } else {
                 map.addLayer(layers[layers.length - 1], getDrawLaterId());
             }
+
+
 
             //populateTimeline();
 
@@ -1134,7 +1150,7 @@
     </script>
     <script type="text/javascript" src="../js/vendor.js"></script>
     <script type="text/javascript" src="../js/bundle.js"></script>
-  
+
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
     <!-- Place the following code before your site's closing </body> tag -->
     <script id="dsq-count-scr" src="//xyzinnovations.disqus.com/count.js" async></script>
